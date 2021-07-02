@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <v-app>
-      <v-app-bar app color="primary" dark class="headline">
+      <v-app-bar app flat color="primary" dark class="headline">
         <v-toolbar-title>Todoリスト</v-toolbar-title>
       </v-app-bar>
-      <v-content>
+      <v-main>
         <router-view/>
-      </v-content>
+      </v-main>
     </v-app>
   </div>
 </template>
