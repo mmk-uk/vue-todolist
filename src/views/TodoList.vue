@@ -28,21 +28,31 @@
                     あと{{ deadlineDays(today,todo.date) }}日
                   </v-col>
 
-                  <v-col>
-                    <v-card-title>{{todo.title}}</v-card-title>
-                    <v-card-subtitle>{{todo.date}}</v-card-subtitle>
-                  </v-col>
-
                   <v-col cols="1" class="text-center">
                     <v-btn text icon color="success" @click="todo.done = !todo.done">
                       <v-icon x-large>{{ doneIcon(todo) }}</v-icon>
                     </v-btn>
                   </v-col>
 
+                  <v-col>
+                    <v-card-title>{{todo.title}}</v-card-title>
+                    <v-card-subtitle>{{todo.date}}</v-card-subtitle>
+                  </v-col>
+
                   <v-col cols="1" class="text-right">
-                    <v-btn text icon v-on:click="deleteTodo(todo.id)">
-                      <v-icon x-large>delete</v-icon>
-                    </v-btn>
+                    <v-row>
+                      <v-col>
+                          <v-btn text icon v-on:click="editTodo(todo.id)">
+                            <v-icon>mdi-square-edit-outline</v-icon>
+                          </v-btn>
+                      </v-col>
+                      <v-col>
+                        <v-btn text icon v-on:click="deleteTodo(todo.id)">
+                          <v-icon>mdi-trash-can-outline</v-icon>
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                    
                   </v-col>
 
                 </v-row>
@@ -74,7 +84,6 @@ export default {
           return new Date(a.date) - new Date(b.date);
         });
         this.today = new Date();
-        
     },
     methods:{
         doneIcon(todo){
@@ -89,19 +98,21 @@ export default {
               localStorage.setItem('todos',JSON.stringify(this.todos));
             }
         },
+        editTodo(id){
+            const index = this.todos.findIndex((item) => item.id == id);
+            this.$router.push({name:'edit',params:{editindex: index}});
+        },
         addTodo(){
             this.$router.push('/create');
         },
         deadlineDays(today,dueday){
-          console.log("----")
-          const today2 = new Date(today.getFullYear(),today.getMonth(),today.getDate());
-          const dueday2 = new Date(dueday)
+          const today2  = new Date(today.getFullYear(),today.getMonth(),today.getDate());
+          const dueday2 = new Date(dueday);
           const dueday3 = new Date(dueday2.getFullYear(),dueday2.getMonth(),dueday2.getDate());
           const termDay = (dueday3 - today2) / 86400000;
           return termDay;
         }
     }
-
 }
 </script>
 

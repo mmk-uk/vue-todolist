@@ -6,7 +6,7 @@
 
           <v-card-text>
             <!--  タイトル  -->
-            <v-text-field v-model="newTodo.title" placeholder="やること"></v-text-field>
+            <v-text-field v-model="tmpTodo.title" placeholder="やること"></v-text-field>
             <!--  締め切り日  -->
             <v-row>
               <v-col>
@@ -20,7 +20,7 @@
                 >
                   <template v-slot:activator="{ on }">
                     <v-text-field
-                      v-model="newTodo.date"
+                      v-model="tmpTodo.date"
                       label="締切日"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -28,7 +28,7 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="newTodo.date"
+                    v-model="tmpTodo.date"
                     @input="showDatePicker = false"
                     locale="jp-ja"
                     :day-format="(date) => new Date(date).getDate()"
@@ -45,7 +45,7 @@
               <v-icon left>mdi-less-than</v-icon> キャンセル
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn dark color="success" elevation="0" v-on:click="addTodo()" class="white--text">追加</v-btn>
+            <v-btn dark :color="registerButtonColor" elevation="0" v-on:click="addTodo()" class="white--text">{{registerButtonName}}</v-btn>
           </v-card-actions>
 
 
@@ -59,9 +59,12 @@
 import { v4 as uuidv4 } from "uuid";
 
 export default {
+
+    props:['editindex'],
     data(){
         return {
-            newTodo:{
+            newTodo: true,
+            tmpTodo:{
               id:"",
               title:"",
               date: "",
@@ -70,19 +73,34 @@ export default {
             showDatePicker: false
         }
     },
+    computed: {
+      registerButtonColor() {
+        return this.newTodo ? "success" : "primary";
+      },
+      registerButtonName() {
+        return this.newTodo ? "登録" : "更新";
+      },
+    },
     methods:{
         toTodoList(){
           this.$router.push("/");
         },
         addTodo(){
-            if(this.newTodo.title === '')return;
+            if(this.tmpTodo.title === '')return;
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
-            this.newTodo.id = uuidv4();
-            todos.push(this.newTodo);
+            this.tmpTodo.id = uuidv4();
+            todos.push(this.tmpTodo);
             localStorage.setItem('todos',JSON.stringify(todos));
-            this.newTodo.title = '';
+            this.tmpTodo.title = '';
             this.$router.push('/');
         }
+    },
+    mounted(){
+      if(this.editindex){
+        const todos = JSON.parse(localStorage.getItem('todos'))||[];
+        this.tmpTodo = todos[this.editindex]
+        this.newTodo = false;
+      }
     }
 
 }

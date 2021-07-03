@@ -15,6 +15,12 @@ const routes = [
     path: '/create',
     name: 'create',
     component: RegisterTodo
+  },
+  {
+    path: '/edit',
+    name: 'edit',
+    component: RegisterTodo,
+    props: true
   }
 ]
 
