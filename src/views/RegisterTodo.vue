@@ -45,13 +45,23 @@
               <v-icon left>mdi-less-than</v-icon> キャンセル
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn dark :color="registerButtonColor" elevation="0" v-on:click="addTodo()" class="white--text">{{registerButtonName}}</v-btn>
+            <v-btn dark :color="registerButtonColor" elevation="0" v-on:click="registerTodo()" class="white--text">{{registerButtonName}}</v-btn>
           </v-card-actions>
 
 
         </v-card>
       </v-col>
     </v-row>
+    <template v-if="!this.newTodo">
+      <v-row>
+        <v-col>
+          <v-btn dark color="#CD113B" elevation="0" block v-on:click="deleteTodo()">
+            削除
+          </v-btn>
+        </v-col>
+      </v-row>
+    </template>
+
   </v-container>
 </template>
 
@@ -85,20 +95,49 @@ export default {
         toTodoList(){
           this.$router.push("/");
         },
+        registerTodo() {
+          if (this.newTodo) {
+            this.addTodo();
+          } else {
+            this.updateTodo();
+          }
+        },
         addTodo(){
-            if(this.tmpTodo.title === '')return;
+            if(this.tmpTodo.title === '' || this.tmpTodo.date === '')return;
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
             this.tmpTodo.id = uuidv4();
             todos.push(this.tmpTodo);
             localStorage.setItem('todos',JSON.stringify(todos));
             this.tmpTodo.title = '';
-            this.$router.push('/');
+            this.tmpTodo.date = '';
+            this.toTodoList();
+
+        },
+        updateTodo(){
+            if(this.tmpTodo.title === '' || this.tmpTodo.date === '')return;
+            const todos = JSON.parse(localStorage.getItem('todos'))||[];
+            todos.splice(this.editindex,1,this.tmpTodo);
+            localStorage.setItem('todos',JSON.stringify(todos));
+            this.tmpTodo.title = '';
+            this.tmpTodo.date = '';
+            this.toTodoList();
+
+        },
+        deleteTodo(){
+          const todos = JSON.parse(localStorage.getItem('todos'))||[];
+          todos.splice(this.editindex,1);
+          localStorage.setItem('todos',JSON.stringify(todos));
+          this.tmpTodo.title = '';
+          this.tmpTodo.date = '';
+          this.toTodoList();
         }
     },
     mounted(){
-      if(this.editindex){
+      if(this.editindex + 1){
+        console.log(this.editindex);
         const todos = JSON.parse(localStorage.getItem('todos'))||[];
-        this.tmpTodo = todos[this.editindex]
+
+        this.tmpTodo = todos[this.editindex];
         this.newTodo = false;
       }
     }
