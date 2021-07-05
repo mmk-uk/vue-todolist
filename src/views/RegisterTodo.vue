@@ -5,6 +5,7 @@
         <v-card outlined>
 
           <v-card-text>
+ 
             <!--  タイトル  -->
             <v-text-field v-model="tmpTodo.title" placeholder="やること"></v-text-field>
             <!--  締め切り日  -->
@@ -70,16 +71,18 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
 
-    props:['editindex'],
+    props:['editid','selectcategorykey'],
     data(){
         return {
             newTodo: true,
             tmpTodo:{
               id:"",
+              categorykey:"",
               title:"",
               date: "",
               done: false
             },
+            editindex: Number,
             showDatePicker: false
         }
     },
@@ -93,7 +96,7 @@ export default {
     },
     methods:{
         toTodoList(){
-          this.$router.push("/");
+          this.$router.push({name:'TodoList',params:{sckey: this.selectcategorykey}});
         },
         registerTodo() {
           if (this.newTodo) {
@@ -106,6 +109,7 @@ export default {
             if(this.tmpTodo.title === '' || this.tmpTodo.date === '')return;
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
             this.tmpTodo.id = uuidv4();
+            this.tmpTodo.categorykey = this.selectcategorykey;
             todos.push(this.tmpTodo);
             localStorage.setItem('todos',JSON.stringify(todos));
             this.tmpTodo.title = '';
@@ -132,11 +136,12 @@ export default {
           this.toTodoList();
         }
     },
-    mounted(){
-      if(this.editindex + 1){
-        console.log(this.editindex);
-        const todos = JSON.parse(localStorage.getItem('todos'))||[];
 
+    mounted(){
+      console.log(this.editid);
+      if(this.editid){
+        const todos = JSON.parse(localStorage.getItem('todos'))||[];
+        this.editindex = todos.findIndex((item) => item.id == this.editid);
         this.tmpTodo = todos[this.editindex];
         this.newTodo = false;
       }
