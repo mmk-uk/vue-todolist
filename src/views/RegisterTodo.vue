@@ -71,7 +71,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
 
-    props:['editid','selectcategorykey'],
+    props:['editid','selectcategorykey','backkey'],
     data(){
         return {
             newTodo: true,
@@ -96,7 +96,7 @@ export default {
     },
     methods:{
         toTodoList(){
-          this.$router.push({name:'TodoList',params:{sckey: this.selectcategorykey}});
+          this.$router.push({name:'TodoList',params:{sckey: this.backkey}});
         },
         registerTodo() {
           if (this.newTodo) {
@@ -138,7 +138,6 @@ export default {
     },
 
     mounted(){
-      console.log(this.editid);
       if(this.editid){
         const todos = JSON.parse(localStorage.getItem('todos'))||[];
         this.editindex = todos.findIndex((item) => item.id == this.editid);

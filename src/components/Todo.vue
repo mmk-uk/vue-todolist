@@ -1,16 +1,23 @@
 <template>
-    <v-card outlined :color="cardColor(todo)">
+    <v-card outlined :color="cardColor(todo)" :style="textColor(todo)">
         <v-container>
 
         <v-row align="center" >
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pa-1">
+                
                 <v-row>
-                    <v-col class="pa-0">
-                        <font size="-1">
-                            あと{{ todo.leftdays }}日
-                        </font>
+                    <v-col class="text-center pa-0" style="font-size:70%">
+                            あと
                     </v-col>
                 </v-row>
+                <v-row>
+                    <v-col class="text-center pa-0">
+                            <span style="font-size:105%;text-align: right">{{todo.leftdays}}</span>
+                            <span style="font-size:80%">日</span>
+                    </v-col>
+                </v-row>
+                
+                <!--
                 <v-row>
                     <v-col class="pa-0">
                         <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
@@ -18,6 +25,7 @@
                         </v-btn>
                     </v-col>
                 </v-row>
+                -->
 
 
             </v-col>
@@ -25,7 +33,7 @@
             <v-col cols="8" sm="8" md="10" lg="10" xl="10">
                 <template v-if="selectCategoryKey == ''">
                     <v-row>
-                        <font size="-1">
+                        <font size="-2">
                             {{ categorytitle }}
                         </font>
                     </v-row>
@@ -36,12 +44,55 @@
             </v-col>
 
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-right">
+            <!--
             <v-btn text icon v-on:click="editTodo(todo.id)">
                 <v-icon>mdi-dots-horizontal</v-icon>
             </v-btn>
+            -->
+            <!--
+            <template v-if="selectCategoryKey != ''">
+                <v-row>
+                    <v-col class="pa-0 text-right">
+                        <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
+                            <v-icon>{{ doneIcon(todo) }}</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="pa-0 text-right">
+                        <v-btn text icon v-on:click="editTodo(todo.id)">
+                            <v-icon>mdi-dots-horizontal</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </template>
+            <template v-else>
+                <v-row>
+                    <v-col class="text-right">
+                        <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
+                            <v-icon>{{ doneIcon(todo) }}</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+            </template>
+            -->
+                <v-row>
+                    <v-col class="pa-0 text-right">
+                        <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
+                            <v-icon>{{ doneIcon(todo) }}</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="pa-0 text-right">
+                        <v-btn text icon v-on:click="editTodo(todo,todo.id)">
+                            <v-icon>mdi-dots-horizontal</v-icon>
+                        </v-btn>
+                    </v-col>
+                </v-row>
+
+            
             </v-col>
-
-
         </v-row>
         </v-container>
     </v-card>
@@ -55,7 +106,7 @@ export default {
     methods:{
         doneTodo(todo){
           todo.done = !todo.done;
-          localStorage.setItem('todos',JSON.stringify(this.todos));
+          //localStorage.setItem('todos',JSON.stringify(this.todos));
         },
         doneIcon(todo){
             return todo.done
@@ -75,13 +126,17 @@ export default {
               }
             }
         },
-        editTodo(id){
-            console.log(this.selectCategoryKey);
-
-            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey}});
+        textColor(todo){
+            if (todo.done) {
+                return "opacity: 0.7";
+            }else{
+                return "opacity: 1";
+            }
         },
-        addTodo(){
-            this.$router.push({name:'create',params:{selectcategorykey: this.selectCategoryKey}});
+        editTodo(todo,id){
+            console.log(this.selectCategoryKey);
+            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: todo.categorykey, backkey: this.selectCategoryKey}});
+
         },
         deadlineDays(today,dueday){
           const today2  = new Date(today.getFullYear(),today.getMonth(),today.getDate());

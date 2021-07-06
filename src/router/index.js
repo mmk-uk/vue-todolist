@@ -28,7 +28,8 @@ const routes = [
   {
     path: '/makecategory',
     name: 'makecategory',
-    component: RegisterCategory
+    component: RegisterCategory,
+    props: true
   }
 ]
 

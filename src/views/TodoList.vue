@@ -35,28 +35,36 @@
 
       <!--  上部分  -->
       <v-row align="center" >
-            <v-col class="pb-0">
+            <v-col class="pt-2 pb-2">
               <v-btn text icon @click="drawer = !drawer">
                 <v-icon x-large>mdi-less-than</v-icon>
               </v-btn>
             </v-col>
 
             <template v-if="this.selectCategoryKey != ''">
-              <v-col class="text-right pb-0">
-                    <v-btn text icon elevation="0" v-on:click="addTodo">
-                      <v-icon x-large>mdi-plus</v-icon>
+              <v-col class="text-right pt-2 pb-2">
+                    <v-btn text icon elevation="0" v-on:click="editCategory">
+                      <v-icon x-large>mdi-dots-horizontal-circle-outline</v-icon>
                     </v-btn>
 
               </v-col>
             </template>
 
       </v-row>
-      <v-row>
+      <v-row align="start">
             <v-col  class="pa-0 pl-6">
                   <h1>
                     {{categoryLabel()}}
                   </h1>
             </v-col>
+            <template v-if="this.selectCategoryKey != ''">
+                <v-col cols="2" class="pa-0 pr-3 text-right">
+                        <v-btn text icon elevation="0" v-on:click="addTodo">
+                          <v-icon x-large>mdi-plus-circle-outline</v-icon>
+                        </v-btn>
+                </v-col>
+             </template>
+
       </v-row>
 
 
@@ -95,7 +103,7 @@
         
       <!--  Todo表示  -->
       <v-row class="ma-0">
-        <v-col class="ma-3">
+        <v-col class="mt-3">
 
           <template v-if="selectCategoryKey == ''">
 
@@ -152,7 +160,6 @@ export default {
     created(){
         //localStorage.clear('categorys');
         //localStorage.clear('todos');
-        //console.log(this.selectCategoryKey);
         this.categorys = JSON.parse(localStorage.getItem('categorys')) || [];
         this.todos = JSON.parse(localStorage.getItem('todos')) || [];
         this.todos.sort(function (a, b) {
@@ -174,35 +181,18 @@ export default {
          //this.todos = this.todos.filter(todo => { return todo.categorykey == this.selectCategoryKey});
         }
     },
+    watch:{
+      selectCategoryKey(){
+        localStorage.setItem('todos',JSON.stringify(this.todos));
+      }
+    },
     methods:{
-        doneTodo(todo){
-          todo.done = !todo.done;
-          localStorage.setItem('todos',JSON.stringify(this.todos));
-        },
-        doneIcon(todo){
-            return todo.done
-            ? "mdi-checkbox-marked-outline"
-            : "mdi-checkbox-blank-outline";
-        },
-        cardColor(todo){
-            if (todo.done) {
-              return "#AAAAAA";
-            }else{
-              if (todo.leftdays <= 1) {
-                return "#F38BA0";
-              }else if(todo.leftdays <= 7){
-                return "#FFBCBC";
-              }else{
-                return "#CDF0EA";
-              }
-            }
-        },
         editTodo(id){
             //console.log(index);
-            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey}});
+            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
         },
         addTodo(){
-            this.$router.push({name:'create',params:{selectcategorykey: this.selectCategoryKey}});
+            this.$router.push({name:'create',params:{selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
         },
         deadlineDays(today,dueday){
           const today2  = new Date(today.getFullYear(),today.getMonth(),today.getDate());
@@ -233,6 +223,9 @@ export default {
         checkCategory(key){
           const index = this.categorys.findIndex((item) => item.id == key);
           return this.categorys[index].title;
+        },
+        editCategory(){
+          this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey}});
         }
         
     }
