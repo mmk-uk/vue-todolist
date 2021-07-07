@@ -80,11 +80,16 @@ export default {
               categorykey:"",
               title:"",
               date: "",
-              done: false
+              done: false,
+              pass: false
             },
+            today:"",
             editindex: Number,
             showDatePicker: false
         }
+    },
+    created(){
+      this.today = new Date();
     },
     computed: {
       registerButtonColor() {
@@ -109,6 +114,7 @@ export default {
             if(this.tmpTodo.title === '' || this.tmpTodo.date === '')return;
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
             this.tmpTodo.id = uuidv4();
+            this.tmpTodo.pass = this.checkPass(this.tmpTodo.date);
             this.tmpTodo.categorykey = this.selectcategorykey;
             todos.push(this.tmpTodo);
             localStorage.setItem('todos',JSON.stringify(todos));
@@ -120,6 +126,7 @@ export default {
         updateTodo(){
             if(this.tmpTodo.title === '' || this.tmpTodo.date === '')return;
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
+            this.tmpTodo.pass = this.checkPass(this.tmpTodo.date);
             todos.splice(this.editindex,1,this.tmpTodo);
             localStorage.setItem('todos',JSON.stringify(todos));
             this.tmpTodo.title = '';
@@ -134,6 +141,16 @@ export default {
           this.tmpTodo.title = '';
           this.tmpTodo.date = '';
           this.toTodoList();
+        },
+        checkPass(date){
+          const today2  = new Date(this.today.getFullYear(),this.today.getMonth(),this.today.getDate());
+          const date2 = new Date(date);
+          const date3 = new Date(date2.getFullYear(),date2.getMonth(),date2.getDate());
+          if ((date3 - today2) < 0){
+            return false;
+          }else{
+            return true;
+          }
         }
     },
 

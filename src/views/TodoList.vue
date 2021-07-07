@@ -23,6 +23,7 @@
           </v-list-item>
         </template>
         
+
         <v-row>
           <v-col class="text-center">
             <v-btn text icon @click="mekeCategory">
@@ -35,33 +36,66 @@
 
       <!--  上部分  -->
       <v-row align="center" >
-            <v-col class="pt-2 pb-2">
-              <v-btn text icon @click="drawer = !drawer">
-                <v-icon x-large>mdi-less-than</v-icon>
+            <v-col class="pt-2 pb-0">
+              <v-btn text icon @click="clickDrawer">
+                <v-icon x-large>mdi-menu</v-icon>
               </v-btn>
             </v-col>
 
             <template v-if="this.selectCategoryKey != ''">
-              <v-col class="text-right pt-2 pb-2">
-                    <v-btn text icon elevation="0" v-on:click="editCategory">
-                      <v-icon x-large>mdi-dots-horizontal-circle-outline</v-icon>
-                    </v-btn>
+              <v-col cols="2" class="text-right pt-2 pb-0">
+
+              </v-col>
+              <v-col cols="2" class="text-right pt-2 pb-0">
+
 
               </v-col>
             </template>
 
       </v-row>
-      <v-row align="start">
-            <v-col  class="pa-0 pl-6">
-                  <h1>
+      <v-row class="ma-0 pt-6" align-content="center" style="height:58px">
+            <template v-if="archivemode == true">
+              <v-col cols="1" class="pa-0 pl-3 pr-3 text-right">
+                    <v-row>
+                      <v-col class="pa-0 pt-4 text-right">
+                          <v-icon large color="black">mdi-check-circle-outline</v-icon>
+                      </v-col>
+                    </v-row>
+              </v-col>
+            </template>
+
+            <v-col  class="pa-0 pl-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden">
+
+                <span style="font-size:190%;font-weight: 900 ">
+
                     {{categoryLabel()}}
-                  </h1>
+                </span>
             </v-col>
             <template v-if="this.selectCategoryKey != ''">
-                <v-col cols="2" class="pa-0 pr-3 text-right">
-                        <v-btn text icon elevation="0" v-on:click="addTodo">
-                          <v-icon x-large>mdi-plus-circle-outline</v-icon>
+                <v-col cols="4" class="pa-0 pr-3 text-right">
+                  <v-row>
+
+                    <template v-if="archivemode == true">
+                      <v-col class="pa-0 pt-4 text-right">
+                        <v-btn text icon elevation="0" @click="archiveModeChange">
+                          <v-icon x-large>mdi-archive-outline</v-icon>
                         </v-btn>
+                      </v-col>
+                    </template>
+                    <template v-else>
+                      <v-col class="pa-0 pt-4 text-right">
+                            <v-btn text icon elevation="0" @click="archiveModeChange">
+                              <v-icon x-large>mdi-archive-outline</v-icon>
+                            </v-btn>
+                      </v-col>
+                      <v-col cols="5" sm="3" md="3" lg="1" xl="1" class="pa-0 pt-4 text-right">
+                            <v-btn text icon elevation="0" v-on:click="editCategory">
+                              <v-icon x-large>mdi-dots-horizontal-circle-outline</v-icon>
+                            </v-btn>
+                      </v-col>
+                    </template>
+                  </v-row>
+
                 </v-col>
              </template>
 
@@ -103,11 +137,11 @@
         
       <!--  Todo表示  -->
       <v-row class="ma-0">
-        <v-col class="mt-3">
+        <v-col class="mt-0 pl-0 pr-0">
 
           <template v-if="selectCategoryKey == ''">
 
-            <template v-for="todo in todos">
+            <template v-for="todo in todos.filter(todo => { return todo.pass == true})">
               <v-row v-bind:key="todo.id" dense>
                 <v-col>
                   <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
@@ -117,26 +151,46 @@
           </template>
 
           <template v-else>
-            <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey})">
-              <v-row v-bind:key="todo.id" dense>
-                <v-col>
-                  <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
-                </v-col>
-              </v-row>
+
+            <template v-if="archivemode == true">
+              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true})">
+                <v-row v-bind:key="todo.id" dense>
+                  <v-col>
+                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
+                  </v-col>
+                </v-row>
+              </template>
             </template>
+            <template v-else>
+              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.done == false})">
+                <v-row v-bind:key="todo.id" dense>
+                  <v-col>
+                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
+                  </v-col>
+                </v-row>
+              </template>
+            </template>
+
+
           </template>
+          <v-row>
+              <template v-if="this.selectCategoryKey != ''">
+                <v-col class="pa-0 pr-3 text-center">
+                        <v-btn text icon elevation="0" v-on:click="addTodo">
+                          <v-icon x-large>mdi-plus</v-icon>
+                        </v-btn>
+                </v-col>
+             </template>
+          </v-row>
 
     
         </v-col>
       </v-row>
-
-
-      
-      
     
 
   </v-container>
-  
+
+
 
 </template>
 
@@ -154,7 +208,8 @@ export default {
             todos:[],
             today:"",
             drawer: false,
-            selectCategoryKey:""
+            selectCategoryKey:"",
+            archivemode:false
         }
     },
     created(){
@@ -184,9 +239,18 @@ export default {
     watch:{
       selectCategoryKey(){
         localStorage.setItem('todos',JSON.stringify(this.todos));
+      },
+      today(){
+        this.todos.forEach(
+          todo => todo.pass = this.checkPass(todo.date)
+        );
       }
     },
     methods:{
+        clickDrawer(){
+          this.drawer = !this.drawer;
+          this.archivemode = false;
+        },
         editTodo(id){
             //console.log(index);
             this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
@@ -202,7 +266,7 @@ export default {
           return termDay;
         },
         mekeCategory(){
-          this.$router.push('/makecategory');
+          this.$router.push({name:'makecategory',params:{editkey: '',backkey: this.selectCategoryKey}});
         },
         categoryLabel(){
           if (this.selectCategoryKey == ""){
@@ -225,17 +289,34 @@ export default {
           return this.categorys[index].title;
         },
         editCategory(){
-          this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey}});
+          this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey,backkey: this.selectCategoryKey}});
+        },
+        checkPass(date){
+          const today2  = new Date(this.today.getFullYear(),this.today.getMonth(),this.today.getDate());
+          const date2 = new Date(date);
+          const date3 = new Date(date2.getFullYear(),date2.getMonth(),date2.getDate());
+          if ((date3 - today2) < 0){
+            return false;
+          }else{
+            return true;
+          }
+        },
+        archiveModeChange(){
+          this.archivemode = !this.archivemode;
         }
         
     }
 }
 </script>
 
-<style scoped>
-    .bottom-right{
-        position: fixed;
-        bottom: 0px;
-        right: 0px;
-    }
+
+<style>
+  .maru {
+  height:50px;
+  width:50px;
+  border-radius:50%;
+  line-height:50px;
+  text-align:center;
+  }
 </style>
+

@@ -32,7 +32,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 export default{
-    props:['editkey'],
+    props:['editkey','backkey'],
     data(){
         return{
             newCategory: true,
@@ -55,7 +55,7 @@ export default{
     },
     methods:{
         toTodoList(){
-          this.$router.push({name:'TodoList',params:{sckey: this.categorykey}});
+          this.$router.push({name:'TodoList',params:{sckey: this.backkey}});
         },
         registerCategory(){
             if (this.newCategory) {
@@ -72,7 +72,7 @@ export default{
             categorys.push(this.tmpCategory);
             localStorage.setItem('categorys',JSON.stringify(categorys));
             this.tmpCategory.title = '';
-            this.toTodoList();
+            this.$router.push({name:'TodoList',params:{sckey: this.categorykey}});
         },
         updateCategory(){
             if(this.tmpCategory.title === '')return;

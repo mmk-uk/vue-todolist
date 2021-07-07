@@ -31,16 +31,19 @@
             </v-col>
 
             <v-col cols="8" sm="8" md="10" lg="10" xl="10">
+                <v-row>
+                    <span style="font-size:110%">
+                        {{todo.title}}
+                    </span>
+                </v-row>
                 <template v-if="selectCategoryKey == ''">
-                    <v-row>
-                        <font size="-2">
+                    <v-row class="pt-1">
+                        <span style="font-size:80%; opacity: 0.7">
                             {{ categorytitle }}
-                        </font>
+                        </span>
                     </v-row>
                 </template>
-                <v-row>
-                    {{todo.title}}
-                </v-row>
+
             </v-col>
 
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-right">
