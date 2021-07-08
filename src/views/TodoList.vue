@@ -3,25 +3,68 @@
     <!--  サイドバー  -->
     <v-navigation-drawer  app temporary absolute v-model="drawer" color="#E6DDC6">
         <v-list-item>
-          <v-list-item-title>
-            
-          </v-list-item-title>
           <v-btn text icon @click="drawer = !drawer">
             <v-icon x-large>mdi-greater-than</v-icon>
           </v-btn>
+          <v-list-item-title>
+            
+          </v-list-item-title>
+          <v-btn text icon @click="dragModeChange">
+            <v-icon x-large>{{dragModeIcon()}}</v-icon>
+          </v-btn>
+
         </v-list-item>
 
         <v-divider></v-divider>
 
-        <v-list-item @click="selectAllCategory">
-          <v-list-item-title>全てのタスク</v-list-item-title>
-        </v-list-item>
 
-        <template v-for="category in this.categorys" >
+
+        
+        
+        <!--
+        <draggable v-bind="categorys" :options="{handle:'.drag'}">
+        <template v-for="category in categorys" >
           <v-list-item dense :key="category.id" @click="selectCategory(category.id)">
             <v-list-item-title>{{category.title}}</v-list-item-title>
+            <v-list-item-icon class="drag">
+              <v-icon>mdi-menu</v-icon>
+            </v-list-item-icon>
           </v-list-item>
         </template>
+        </draggable>
+        -->
+
+        <template v-if="dragmode==true">
+          <v-list-item>
+            <v-list-item-title>全てのタスク</v-list-item-title>
+          </v-list-item>
+          <draggable tag="div" v-model="categorys" @update="dragCategory">
+          <template v-for="category in categorys" >
+            <v-list-item dense :key="category.id">
+              <v-list-item-title>{{category.title}}</v-list-item-title>
+              <v-list-item-icon class="drag">
+                <v-icon>mdi-menu</v-icon>
+              </v-list-item-icon>
+            </v-list-item>
+          </template>
+          </draggable>
+        </template>
+
+        <template v-else>
+          <v-list-item @click="selectAllCategory">
+            <v-list-item-title>全てのタスク</v-list-item-title>
+          </v-list-item>
+          <template v-for="category in categorys" >
+            <v-list-item dense :key="category.id" @click="selectCategory(category.id)">
+              <v-list-item-title>{{category.title}}</v-list-item-title>
+            </v-list-item>
+          </template>
+        </template>
+
+
+
+
+
         
 
         <v-row>
@@ -75,19 +118,12 @@
                 <v-col cols="4" class="pa-0 pr-3 text-right">
                   <v-row>
 
-                    <template v-if="archivemode == true">
-                      <v-col class="pa-0 pt-4 text-right">
-                        <v-btn text icon elevation="0" @click="archiveModeChange">
-                          <v-icon x-large>mdi-archive-outline</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </template>
-                    <template v-else>
-                      <v-col class="pa-0 pt-4 text-right">
-                            <v-btn text icon elevation="0" @click="archiveModeChange">
-                              <v-icon x-large>mdi-archive-outline</v-icon>
-                            </v-btn>
-                      </v-col>
+                    <v-col class="pa-0 pt-4 text-right">
+                      <v-btn text icon elevation="0" @click="archiveModeChange">
+                        <v-icon x-large>{{archiveModeIcon()}}</v-icon>
+                      </v-btn>
+                    </v-col>
+                    <template  v-if="archivemode == false">
                       <v-col cols="5" sm="3" md="3" lg="1" xl="1" class="pa-0 pt-4 text-right">
                             <v-btn text icon elevation="0" v-on:click="editCategory">
                               <v-icon x-large>mdi-dots-horizontal-circle-outline</v-icon>
@@ -153,7 +189,7 @@
           <template v-else>
 
             <template v-if="archivemode == true">
-              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true})">
+              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
@@ -162,7 +198,7 @@
               </template>
             </template>
             <template v-else>
-              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.done == false})">
+              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.done == false)})">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
@@ -174,7 +210,7 @@
 
           </template>
           <v-row>
-              <template v-if="this.selectCategoryKey != ''">
+              <template v-if="this.selectCategoryKey != '' && archivemode == false">
                 <v-col class="pa-0 pr-3 text-center">
                         <v-btn text icon elevation="0" v-on:click="addTodo">
                           <v-icon x-large>mdi-plus</v-icon>
@@ -195,11 +231,13 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import Todo from "@/components/Todo";
 
 export default {
     props:['sckey'],
     components: {
+      draggable,
       Todo
     },
     data(){
@@ -209,7 +247,8 @@ export default {
             today:"",
             drawer: false,
             selectCategoryKey:"",
-            archivemode:false
+            archivemode:false,
+            dragmode:false
         }
     },
     created(){
@@ -244,6 +283,11 @@ export default {
         this.todos.forEach(
           todo => todo.pass = this.checkPass(todo.date)
         );
+      },
+      drawer(){
+        if(this.drawer==false){
+          this.dragmode = false;
+        }
       }
     },
     methods:{
@@ -253,9 +297,11 @@ export default {
         },
         editTodo(id){
             //console.log(index);
+            localStorage.setItem('todos',JSON.stringify(this.todos));
             this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
         },
         addTodo(){
+            localStorage.setItem('todos',JSON.stringify(this.todos));
             this.$router.push({name:'create',params:{selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
         },
         deadlineDays(today,dueday){
@@ -266,6 +312,7 @@ export default {
           return termDay;
         },
         mekeCategory(){
+          localStorage.setItem('todos',JSON.stringify(this.todos));
           this.$router.push({name:'makecategory',params:{editkey: '',backkey: this.selectCategoryKey}});
         },
         categoryLabel(){
@@ -289,6 +336,7 @@ export default {
           return this.categorys[index].title;
         },
         editCategory(){
+          localStorage.setItem('todos',JSON.stringify(this.todos));
           this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey,backkey: this.selectCategoryKey}});
         },
         checkPass(date){
@@ -303,6 +351,26 @@ export default {
         },
         archiveModeChange(){
           this.archivemode = !this.archivemode;
+        },
+        archiveModeIcon(){
+          if (this.archivemode == true){
+            return "mdi-chevron-left";
+          }else{
+            return "mdi-archive-outline";
+          }
+        },
+        dragCategory(){
+          localStorage.setItem('categorys',JSON.stringify(this.categorys));
+        },
+        dragModeChange(){
+          this.dragmode = !this.dragmode;
+        },
+        dragModeIcon(){
+          if (this.dragmode == true){
+            return "mdi-check";
+          }else{
+            return "mdi-swap-vertical";
+          }
         }
         
     }
