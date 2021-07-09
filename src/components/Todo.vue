@@ -3,8 +3,9 @@
         <v-container>
 
         <v-row align="center" >
-            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pa-1">
-
+            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
+                <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:1px solid ;margin:auto">
+                <v-container >
                 <template v-if="todo.leftdays < 0">
 
                     <v-row>
@@ -15,7 +16,7 @@
                     </v-row>
                     <v-row>
                         <v-col class="text-center pa-0" style="font-size:70%">
-                                オーバー
+                                経過
                         </v-col>
                     </v-row>
                 </template>
@@ -26,8 +27,8 @@
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col class="text-center pa-0">
-                                <span style="font-size:80%">まで</span>
+                        <v-col class="text-center pa-0"  style="font-size:80%">
+                                まで
                         </v-col>
                     </v-row>
                 </template>
@@ -37,15 +38,15 @@
                                 明日
                         </v-col>
                     </v-row>
-                    <v-row>
-                        <v-col class="text-center pa-0">
-                                <span style="font-size:80%">まで</span>
+                    <v-row >
+                        <v-col class="text-center pa-0"  style="font-size:80%">
+                                まで
                         </v-col>
                     </v-row>
                 </template>
                 <template v-else>
                     <v-row>
-                        <v-col class="text-center pa-0" style="font-size:70%">
+                        <v-col class="text-center pa-0 mt-1" style="font-size:70%">
                                 あと
                         </v-col>
                     </v-row>
@@ -56,30 +57,8 @@
                         </v-col>
                     </v-row>
                 </template>
-
-                <!--
-                <v-row>
-                    <v-col class="text-center pa-0" style="font-size:70%">
-                            あと
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col class="text-center pa-0">
-                            <span style="font-size:105%;text-align: right">{{todo.leftdays}}</span>
-                            <span style="font-size:80%">日</span>
-                    </v-col>
-                </v-row>
-                
-                
-                <v-row>
-                    <v-col class="pa-0">
-                        <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
-                            <v-icon>{{ doneIcon(todo) }}</v-icon>
-                        </v-btn>
-                    </v-col>
-                </v-row>
-                -->
-
+                </v-container>
+                </v-card>
 
             </v-col>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container :style="getWindowHeightSize()">
     <!--  サイドバー  -->
     <v-navigation-drawer  app temporary absolute v-model="drawer" color="#E6DDC6">
         <v-list-item>
@@ -9,7 +9,7 @@
           </v-list-item-title>
 
           <v-btn text icon @click="drawer = !drawer">
-            <v-icon x-large>mdi-greater-than</v-icon>
+            <v-icon x-large>mdi-less-than</v-icon>
           </v-btn>
 
         </v-list-item>
@@ -96,7 +96,6 @@
               </v-col>
               <v-col cols="2" class="text-right pt-2 pb-0">
 
-
               </v-col>
             </template>
 
@@ -113,16 +112,13 @@
             </template>
 
             <v-col  class="pa-0 pl-2" style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden">
-
-                <span style="font-size:190%;font-weight: 900 ">
-
+                <span style="font-size:190%;font-weight: 900">
                     {{categoryLabel()}}
                 </span>
             </v-col>
             <template v-if="this.selectCategoryKey != ''">
                 <v-col cols="4" class="pa-0 pr-3 text-right">
                   <v-row>
-
                     <v-col class="pa-0 pt-4 text-right">
                       <v-btn text icon elevation="0" @click="archiveModeChange">
                         <v-icon x-large>{{archiveModeIcon()}}</v-icon>
@@ -376,20 +372,14 @@ export default {
           }else{
             return "mdi-swap-vertical";
           }
+        },
+        getWindowHeightSize(){
+          const wh = window.innerHeight;
+          console.log(wh);
+          return "height:" + (wh + 60);
         }
         
     }
 }
 </script>
-
-
-<style>
-  .maru {
-  height:50px;
-  width:50px;
-  border-radius:50%;
-  line-height:50px;
-  text-align:center;
-  }
-</style>
 
