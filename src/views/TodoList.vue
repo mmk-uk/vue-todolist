@@ -3,23 +3,19 @@
     <!--  サイドバー  -->
     <v-navigation-drawer  app temporary absolute v-model="drawer" color="#E6DDC6">
         <v-list-item>
+
+          <v-list-item-title>
+            カテゴリ
+          </v-list-item-title>
+
           <v-btn text icon @click="drawer = !drawer">
             <v-icon x-large>mdi-greater-than</v-icon>
-          </v-btn>
-          <v-list-item-title>
-            
-          </v-list-item-title>
-          <v-btn text icon @click="dragModeChange">
-            <v-icon x-large>{{dragModeIcon()}}</v-icon>
           </v-btn>
 
         </v-list-item>
 
         <v-divider></v-divider>
 
-
-
-        
         
         <!--
         <draggable v-bind="categorys" :options="{handle:'.drag'}">
@@ -66,14 +62,23 @@
 
 
         
+        <v-list-item>
+          <v-row>
+            <template v-if="dragmode==false">
+              <v-col class="pt-1 text-left">
+                <v-btn text icon @click="mekeCategory">
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </v-col>
+            </template>
+            <v-col class="pt-1 text-right">
+              <v-btn text icon @click="dragModeChange">
+                <v-icon>{{dragModeIcon()}}</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-list-item>
 
-        <v-row>
-          <v-col class="text-center">
-            <v-btn text icon @click="mekeCategory">
-              <v-icon>mdi-plus-thick</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
 
       </v-navigation-drawer>
 
@@ -177,7 +182,7 @@
 
           <template v-if="selectCategoryKey == ''">
 
-            <template v-for="todo in todos.filter(todo => { return todo.pass == true})">
+            <template v-for="todo in todos.filter(todo => { return todo.pass == true || todo.done == false})">
               <v-row v-bind:key="todo.id" dense>
                 <v-col>
                   <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>

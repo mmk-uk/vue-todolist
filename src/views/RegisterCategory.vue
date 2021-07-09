@@ -87,16 +87,16 @@ export default{
             const todos = JSON.parse(localStorage.getItem('todos'))||[];
             const newtodos = todos.filter(todo => { return todo.categorykey != this.editkey});
             localStorage.setItem('todos',JSON.stringify(newtodos));
-            console.log(todos);
+
 
             const categorys = JSON.parse(localStorage.getItem('categorys'))||[];
             categorys.splice(this.editindex,1);
             localStorage.setItem('categorys',JSON.stringify(categorys));
-            console.log(categorys);
+
 
             this.tmpCategory.title = '';
             this.categorykey = '';
-            this.toTodoList();
+            this.$router.push({name:'TodoList',params:{sckey: ''}});
         }
     },
     mounted(){

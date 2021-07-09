@@ -4,7 +4,60 @@
 
         <v-row align="center" >
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pa-1">
-                
+
+                <template v-if="todo.leftdays < 0">
+
+                    <v-row>
+                        <v-col class="text-center pa-0">
+                                <span style="font-size:105%;text-align: right">{{-todo.leftdays}}</span>
+                                <span style="font-size:80%">日</span>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col class="text-center pa-0" style="font-size:70%">
+                                オーバー
+                        </v-col>
+                    </v-row>
+                </template>
+                <template v-else-if="todo.leftdays == 0">
+                    <v-row>
+                        <v-col class="text-center pa-0" style="font-size:105%">
+                                今日
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col class="text-center pa-0">
+                                <span style="font-size:80%">まで</span>
+                        </v-col>
+                    </v-row>
+                </template>
+                <template v-else-if="todo.leftdays == 1">
+                    <v-row>
+                        <v-col class="text-center pa-0" style="font-size:105%">
+                                明日
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col class="text-center pa-0">
+                                <span style="font-size:80%">まで</span>
+                        </v-col>
+                    </v-row>
+                </template>
+                <template v-else>
+                    <v-row>
+                        <v-col class="text-center pa-0" style="font-size:70%">
+                                あと
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col class="text-center pa-0">
+                                <span style="font-size:105%;text-align: right">{{todo.leftdays}}</span>
+                                <span style="font-size:80%">日</span>
+                        </v-col>
+                    </v-row>
+                </template>
+
+                <!--
                 <v-row>
                     <v-col class="text-center pa-0" style="font-size:70%">
                             あと
@@ -17,7 +70,7 @@
                     </v-col>
                 </v-row>
                 
-                <!--
+                
                 <v-row>
                     <v-col class="pa-0">
                         <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
