@@ -1,0 +1,76 @@
+<template>
+    <v-container>
+        <v-row>
+            <v-col class="text-center">
+                <v-card color="#FEF7DC">
+                    <v-card-title>
+                        <h2>新規登録</h2>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-form>
+                            <v-text-field prepend-icon="mdi-account-circle" label="メールアドレス" v-model="email" :rules="[rules.email]" />
+                            <v-text-field prepend-icon="mdi-lock" label="パスワード(半角英数字をそれぞれ1種類以上含む8文字以上100文字以下)" v-model="password" :rules="[rules.password]" />
+                            <v-card-actions class="pa-0">
+                                <v-btn text class="pl-0" @click="backHome">
+                                    <v-icon left>mdi-less-than</v-icon>キャンセル
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn dark color="#A19882" @click="signUp">
+                                    登録
+                                </v-btn>
+                            </v-card-actions>
+                        </v-form>
+                    </v-card-text>
+                </v-card>
+
+            </v-col>
+        </v-row>
+    </v-container>
+</template>
+
+<script>
+import firebase from "firebase/app"
+import "firebase/auth"
+import "firebase/firestore"
+
+export default {
+  name: "signup",
+  data() {
+    return {
+        email: "",
+        password: "",
+        rules: {
+            required: value => !!value || 'Required.',
+            counter: value => value.length >= 6 || '6文字以上',
+            email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || '不正なメールアドレスです.'
+            },
+            password: value => {
+            const pattern = /^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}$/i
+            return pattern.test(value) || '不正なパスワードです.'
+            }
+        }
+    };
+  },
+  methods: {
+    signUp() {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+      .then(user => {
+        // FirestoreのドキュメントにユーザーUID、emailフィールドにアドレスをセットする
+        firebase.firestore().collection('users').doc(user.user.uid).set({
+          email: this.email
+        })
+        // サインイン画面に遷移
+        this.$router.push('/signin');
+      })
+      .catch(error => {
+        alert(error.message)
+      })
+    },
+    backHome(){
+        this.$router.push('/');
+    }
+  }
+};
+</script>

@@ -79,6 +79,16 @@
           </v-row>
         </v-list-item>
 
+        <v-list-item>
+          <v-row>
+            <v-col class="text-center">
+              <v-btn color="#CD113B" @click="logout">
+                ログアウト
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-list-item>
+
 
       </v-navigation-drawer>
 
@@ -234,9 +244,11 @@
 <script>
 import draggable from 'vuedraggable';
 import Todo from "@/components/Todo";
+import firebase from "firebase/app"
+import "firebase/auth"
 
 export default {
-    props:['sckey'],
+    props:['sckey','userid'],
     components: {
       draggable,
       Todo
@@ -263,11 +275,12 @@ export default {
         this.today = new Date();
         //this.selectCategoryKey = "";
         
-        
+        console.log(this.userid);
         this.todos.forEach(
           todo => todo.leftdays = this.deadlineDays(this.today,todo.date)
         );
         localStorage.setItem('todos',JSON.stringify(this.todos));
+
 
     },
     mounted(){
@@ -377,6 +390,9 @@ export default {
           const wh = window.innerHeight;
           console.log(wh);
           return "height:" + (wh + 60);
+        },
+        logout() {
+            firebase.auth().signOut();
         }
         
     }

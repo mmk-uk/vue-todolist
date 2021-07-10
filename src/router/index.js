@@ -3,13 +3,22 @@ import VueRouter from 'vue-router'
 import TodoList from '../views/TodoList.vue'
 import RegisterTodo from '../views/RegisterTodo.vue'
 import RegisterCategory from '../views/RegisterCategory.vue'
+import Signin from '../views/Signin.vue'
+import Signup from '../views/Signup.vue'
+import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'TodoList',
+    name: 'home',
+    component: Home,
+    props: true
+  },
+  {
+    path: '/todolist',
+    name: 'todolist',
     component: TodoList,
     props: true
   },
@@ -30,7 +39,20 @@ const routes = [
     name: 'makecategory',
     component: RegisterCategory,
     props: true
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: Signin,
+    props: true
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: Signup,
+    props: true
   }
+
 ]
 
 const router = new VueRouter({

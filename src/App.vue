@@ -13,26 +13,45 @@
             </v-col>
           </v-row>
       </v-app-bar>
+
       <v-main>
-        <router-view/>
+        <router-view></router-view>
       </v-main>
+      
     </v-app>
   </div>
 </template>
 
 
 <script>
+import firebase from "firebase/app"
+import "firebase/auth"
+import "firebase/firestore"
+//import Signin from "@/views/Signin";
 
 export default {
   name: "App",
+  components:{
+  //  Signin
+  },
   data(){
         return{
+            isLogin: false,
+            userData: null,
             today:""
         }
   },
   created(){
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.isLogin = true;
+        this.userData = user;
+      } else {
+        this.isLogin = false;
+        this.userData = null;
+      }
+    });
     this.today = new Date();
-    
   }
 };
 </script>
@@ -40,5 +59,9 @@ export default {
 <style>
 #app {
   font-family: 'M PLUS Rounded 1c';
+}
+
+body {
+  background-color: #FEF7DC;
 }
 </style>
