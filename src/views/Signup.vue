@@ -37,6 +37,7 @@ export default {
   name: "signup",
   data() {
     return {
+        db: null,
         email: "",
         password: "",
         rules: {
@@ -53,12 +54,15 @@ export default {
         }
     };
   },
+  created(){
+    this.db = firebase.firestore();
+  },
   methods: {
     signUp() {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
       .then(user => {
         // FirestoreのドキュメントにユーザーUID、emailフィールドにアドレスをセットする
-        firebase.firestore().collection('users').doc(user.user.uid).set({
+        this.db.collection('users').doc(user.user.uid).set({
           email: this.email
         })
         // サインイン画面に遷移

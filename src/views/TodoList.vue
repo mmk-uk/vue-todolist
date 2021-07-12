@@ -1,5 +1,5 @@
 <template>
-  <v-container :style="getWindowHeightSize()">
+  <v-container>
     <!--  サイドバー  -->
     <v-navigation-drawer  app temporary absolute v-model="drawer" color="#E6DDC6">
         <v-list-item>
@@ -16,33 +16,19 @@
 
         <v-divider></v-divider>
 
-        
-        <!--
-        <draggable v-bind="categorys" :options="{handle:'.drag'}">
-        <template v-for="category in categorys" >
-          <v-list-item dense :key="category.id" @click="selectCategory(category.id)">
-            <v-list-item-title>{{category.title}}</v-list-item-title>
-            <v-list-item-icon class="drag">
-              <v-icon>mdi-menu</v-icon>
-            </v-list-item-icon>
-          </v-list-item>
-        </template>
-        </draggable>
-        -->
-
         <template v-if="dragmode==true">
           <v-list-item>
             <v-list-item-title>全てのタスク</v-list-item-title>
           </v-list-item>
           <draggable tag="div" v-model="categorys" @update="dragCategory">
-          <template v-for="category in categorys" >
-            <v-list-item dense :key="category.id">
-              <v-list-item-title>{{category.title}}</v-list-item-title>
-              <v-list-item-icon class="drag">
-                <v-icon>mdi-menu</v-icon>
-              </v-list-item-icon>
-            </v-list-item>
-          </template>
+            <template v-for="category in categorys" >
+              <v-list-item dense :key="category.id">
+                <v-list-item-title>{{category.title}}</v-list-item-title>
+                <v-list-item-icon class="drag">
+                  <v-icon>mdi-menu</v-icon>
+                </v-list-item-icon>
+              </v-list-item>
+            </template>
           </draggable>
         </template>
 
@@ -51,7 +37,7 @@
             <v-list-item-title>全てのタスク</v-list-item-title>
           </v-list-item>
           <template v-for="category in categorys" >
-            <v-list-item dense :key="category.id" @click="selectCategory(category.id)">
+            <v-list-item dense :key="category.id" @click="selectCategory(category.title,category.id)">
               <v-list-item-title>{{category.title}}</v-list-item-title>
             </v-list-item>
           </template>
@@ -82,7 +68,7 @@
         <v-list-item>
           <v-row>
             <v-col class="text-center">
-              <v-btn color="#CD113B" @click="logout">
+              <v-btn dark elevation="0" color="#CD113B" @click="logout">
                 ログアウト
               </v-btn>
             </v-col>
@@ -148,40 +134,6 @@
 
       </v-row>
 
-
-
-
-      <!--  新規追加  -->
-      <!--
-      <v-row justify="center"  align="center">
-        <v-col>
-          <h1>
-          今日：{{today.getFullYear()}}年{{today.getMonth()+1}}月{{today.getDate()}}日
-          </h1>
-        </v-col>
-        <v-col class="text-right">
-          <v-row no-gutters>
-            <v-col>
-
-            </v-col>
-            <v-col cols="2">
-              <v-btn text icon elevation="0" v-on:click="changeEditmode">
-                <v-icon x-large>{{ editmodeIcon(this.editmode) }}</v-icon>
-              </v-btn>
-            </v-col>
-            <v-col cols="2">
-              <v-btn text icon elevation="0" v-on:click="addTodo">
-                <v-icon x-large>mdi-plus-box-outline</v-icon>
-              </v-btn>
-            </v-col>
-
-          </v-row>
-          
-
-        </v-col>
-      </v-row>
-      -->
-        
       <!--  Todo表示  -->
       <v-row class="ma-0">
         <v-col class="mt-0 pl-0 pr-0">
@@ -191,7 +143,7 @@
             <template v-for="todo in todos.filter(todo => { return todo.pass == true || todo.done == false})">
               <v-row v-bind:key="todo.id" dense>
                 <v-col>
-                  <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
+                  <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
                 </v-col>
               </v-row>
             </template>
@@ -203,7 +155,7 @@
               <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
-                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
+                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
                   </v-col>
                 </v-row>
               </template>
@@ -212,7 +164,7 @@
               <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.done == false)})">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
-                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)"></Todo>
+                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
                   </v-col>
                 </v-row>
               </template>
@@ -229,8 +181,6 @@
                 </v-col>
              </template>
           </v-row>
-
-    
         </v-col>
       </v-row>
     
@@ -244,54 +194,163 @@
 <script>
 import draggable from 'vuedraggable';
 import Todo from "@/components/Todo";
-import firebase from "firebase/app"
-import "firebase/auth"
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 export default {
-    props:['sckey','userid'],
+    props:['sckey'],
     components: {
       draggable,
       Todo
     },
     data(){
         return{
+            userid:"",
+            db:null,
             categorys:[],
             todos:[],
             today:"",
             drawer: false,
             selectCategoryKey:"",
+            selectCategoryTitle:"",
             archivemode:false,
             dragmode:false
         }
     },
     created(){
+         const userinfo = JSON.parse(localStorage.getItem('userinfo')) || [];
+         console.log("ID:"+userinfo);
+        this.userid = userinfo.userid;
+        
+
         //localStorage.clear('categorys');
         //localStorage.clear('todos');
-        this.categorys = JSON.parse(localStorage.getItem('categorys')) || [];
-        this.todos = JSON.parse(localStorage.getItem('todos')) || [];
-        this.todos.sort(function (a, b) {
-          return new Date(a.date) - new Date(b.date);
+        this.db = firebase.firestore();
+
+
+
+
+        //this.categorys = JSON.parse(localStorage.getItem('categorys')) || [];
+        /*
+        this.db.collection('users').doc(this.userid).collection('categorys').get()
+        .then((querySnapshot) => {
+            console.log("カテゴリ");
+            querySnapshot.forEach((category) => {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(category.id, " => ", category.data());
+                this.categorys.push(category.data());
+            });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
         });
+        //console.log(this.categorys);
+
+        //this.todos = JSON.parse(localStorage.getItem('todos')) || [];
+       // const todosSnapshot = this.db.collection('users').doc(this.userid).collection('todos').orderBy("date").get() || [];
+        this.db.collection('users').doc(this.userid).collection('todos').get()
+        .then((querySnapshot) => {
+            console.log("Todo");
+            querySnapshot.forEach((todo) => {
+                // doc.data() is never undefined for query doc snapshots
+                console.log(todo.id, " => ", todo.data());
+                this.todos.push(todo.data());
+            });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+        */
+
+        //console.log(this.todos);
+
+        //console.log(this.todos);
+
+        //this.todos.sort(function (a, b) {
+        //  return new Date(a.date) - new Date(b.date);
+        //});
         this.today = new Date();
         //this.selectCategoryKey = "";
         
-        console.log(this.userid);
-        this.todos.forEach(
-          todo => todo.leftdays = this.deadlineDays(this.today,todo.date)
-        );
-        localStorage.setItem('todos',JSON.stringify(this.todos));
-
+        //this.todos.forEach(
+        //  todo => todo.leftdays = this.deadlineDays(this.today,todo.date)
+        //);
+        //localStorage.setItem('todos',JSON.stringify(this.todos));
 
     },
     mounted(){
+
+        this.db.collection('users').doc(this.userid).collection('categorys')
+        .onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const doc = change.doc
+            // 変更されたレコードの配列上のインデックス番号を特定する
+            // 配列のfindIndexで、tasks配列のうち task.id プロパティがchange.doc.idと同じもののIndex番号を取得
+            const index = this.categorys.findIndex(task => task.id === change.doc.id)
+            // タスクが追加された時、tasks配列に追加
+            if (change.type === 'added') {
+              this.categorys.push({id: doc.data().id, title:doc.data().title, order:doc.data().order});
+              this.categorys.sort(function (a, b) {
+                return new Date(a.order) - new Date(b.order);
+              });
+            }
+            //if (change.type === 'modified'){
+
+           // }
+            // タスクが削除された時、tasks配列を削除
+            if (change.type === "removed") {
+              this.categorys.splice(index, 1)
+            }
+          })
+        })
+
+        this.db.collection('users').doc(this.userid).collection('todos')
+        .onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const doc = change.doc
+            // 変更されたレコードの配列上のインデックス番号を特定する
+            // 配列のfindIndexで、tasks配列のうち task.id プロパティがchange.doc.idと同じもののIndex番号を取得
+            const index = this.categorys.findIndex(task => task.id === change.doc.id)
+
+
+
+            // タスクが追加された時、tasks配列に追加
+            if (change.type === 'added') {
+              this.todos.push({id: doc.data().id, categorykey:doc.data().categorykey,title:doc.data().title,date:doc.data().date,done:doc.data().done,pass:doc.data().pass,leftdays:this.deadlineDays(this.today,doc.data().date)});
+              this.todos.sort(function (a, b) {
+                return new Date(a.date) - new Date(b.date);
+              });
+            }
+            // タスクが削除された時、tasks配列を削除
+            if (change.type === "removed") {
+              this.todos.splice(index, 1);
+            }
+          })
+        })
+
+
         if (this.sckey){
           this.selectCategoryKey = this.sckey;
-         //this.todos = this.todos.filter(todo => { return todo.categorykey == this.selectCategoryKey});
+          //console.log(this.sckey);
+          //console.log(this.db.collection('users').doc(this.userid).collection('categorys').doc(this.sckey).get().data());
+         
+
+
+
+          
+          //this.selectCategoryTitle = this.db.collection('users').doc(this.userid).collection('categorys').doc(this.sckey).get().title;
+          //console.log("categorytitle:"+this.selectCategoryTitle);
+          //this.todos = this.todos.filter(todo => { return todo.categorykey == this.selectCategoryKey});
         }
+
+
+
+
     },
     watch:{
       selectCategoryKey(){
-        localStorage.setItem('todos',JSON.stringify(this.todos));
+        //localStorage.setItem('todos',JSON.stringify(this.todos));
       },
       today(){
         this.todos.forEach(
@@ -311,12 +370,12 @@ export default {
         },
         editTodo(id){
             //console.log(index);
-            localStorage.setItem('todos',JSON.stringify(this.todos));
-            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
+            //localStorage.setItem('todos',JSON.stringify(this.todos));
+            this.$router.push({name:'edit',params:{editid: id,selectcategorytitle: this.selectCategoryTitle ,selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey,userid: this.userid}});
         },
         addTodo(){
-            localStorage.setItem('todos',JSON.stringify(this.todos));
-            this.$router.push({name:'create',params:{selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey}});
+            //localStorage.setItem('todos',JSON.stringify(this.todos));
+            this.$router.push({name:'create',params:{selectcategorytitle: this.selectCategoryTitle ,selectcategorykey: this.selectCategoryKey, backkey: this.selectCategoryKey,userid: this.userid}});
         },
         deadlineDays(today,dueday){
           const today2  = new Date(today.getFullYear(),today.getMonth(),today.getDate());
@@ -326,18 +385,40 @@ export default {
           return termDay;
         },
         mekeCategory(){
-          localStorage.setItem('todos',JSON.stringify(this.todos));
-          this.$router.push({name:'makecategory',params:{editkey: '',backkey: this.selectCategoryKey}});
+          //localStorage.setItem('todos',JSON.stringify(this.todos));
+          this.$router.push({name:'makecategory',params:{editkey: '',categorysize:this.categorys.length,backkey: this.selectCategoryKey,userid: this.userid}});
         },
         categoryLabel(){
           if (this.selectCategoryKey == ""){
             return "全てのタスク";
           }else{
-            const index = this.categorys.findIndex((item) => item.id == this.selectCategoryKey);
-            return this.categorys[index].title;
+            try{
+              const index = this.categorys.findIndex((item) => item.id == this.selectCategoryKey);
+
+              //console.log("タイトル："+this.categorys[index].title);
+              //console.log("カテゴリ："+this.categorys);
+
+              this.selectCategoryTitle = this.categorys[index].title;
+
+              return this.categorys[index].title;
+            }catch(e){
+              console.log(e);
+            }
+
+            //const index = this.categorys.findIndex((item) => item.id == this.selectCategoryKey);
+            //return this.categorys[index].title;
+            //console.log(this.categorys);
+
+
+            //console.log("カテゴリ："+this.selectCategoryTitle)
+            //return this.selectCategoryTitle;
+            
+            //return this.db.collection('users').doc(this.userid).collection('categorys').doc(this.selectCategoryKey).get().title;
+
           }
         },
-        selectCategory(id){
+        selectCategory(title,id){
+          this.selectCategoryTitle = title;
           this.selectCategoryKey = id;
           this.drawer = false;
         },
@@ -347,11 +428,17 @@ export default {
         },
         checkCategory(key){
           const index = this.categorys.findIndex((item) => item.id == key);
-          return this.categorys[index].title;
+          try{
+              return this.categorys[index].title;
+          }catch(e){
+              console.log(e);
+            }
         },
         editCategory(){
-          localStorage.setItem('todos',JSON.stringify(this.todos));
-          this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey,backkey: this.selectCategoryKey}});
+          //localStorage.setItem('todos',JSON.stringify(this.todos));
+          const editindex = this.categorys.findIndex((item) => item.id == this.selectCategoryKey);
+          const category = this.categorys[editindex];
+          this.$router.push({name:'makecategory',params:{editkey: this.selectCategoryKey,editcategory: category,backkey: this.selectCategoryKey,userid: this.userid}});
         },
         checkPass(date){
           const today2  = new Date(this.today.getFullYear(),this.today.getMonth(),this.today.getDate());
@@ -374,10 +461,24 @@ export default {
           }
         },
         dragCategory(){
-          localStorage.setItem('categorys',JSON.stringify(this.categorys));
+          //localStorage.setItem('categorys',JSON.stringify(this.categorys));
+          this.categorys.forEach((category) => {
+              category.order = this.categorys.indexOf(category) + 1;
+            }
+          )
+
         },
         dragModeChange(){
-          this.dragmode = !this.dragmode;
+          if (this.dragmode == true){
+            this.dragmode = false;
+            this.categorys.forEach((category) => {
+              this.db.collection('users').doc(this.userid).collection('categorys').doc(category.id).set(category);
+            }
+            )
+          }else{
+            this.dragmode = true;
+          }
+         
         },
         dragModeIcon(){
           if (this.dragmode == true){
@@ -386,13 +487,10 @@ export default {
             return "mdi-swap-vertical";
           }
         },
-        getWindowHeightSize(){
-          const wh = window.innerHeight;
-          console.log(wh);
-          return "height:" + (wh + 60);
-        },
         logout() {
             firebase.auth().signOut();
+            localStorage.clear('userinfo');
+            this.$router.push("/");
         }
         
     }

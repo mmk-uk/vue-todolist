@@ -1,7 +1,16 @@
 <template>
     <v-container>
         <v-row>
-            <v-col class="text-center">
+            <v-col class="pb-0">
+                <v-alert v-model="alert" type="error" dismissible>
+                    <span style="font-size:90%">
+                    {{alertmessage}}
+                    </span>
+                </v-alert>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="text-center pt-0">
                 <v-card color="#FEF7DC">
                     <v-card-title>
                         <h2>ログイン</h2>
@@ -25,6 +34,8 @@
 
             </v-col>
         </v-row>
+
+
     </v-container>
 </template>
 
@@ -38,7 +49,9 @@ export default {
     data() {
         return {
             email: "",
-            password: ""
+            password: "",
+            alert: false,
+            alertmessage:""
         };
     },
     methods: {
@@ -47,10 +60,21 @@ export default {
                 .then(user => {
                     // サインインに成功したユーザーのUIDをパラメータにして、Todo画面に遷移
                     // パラメータについては、router.js参照
-                    this.$router.push({ name: 'todolist', params: {userid: user.user.uid }})
+                    localStorage.setItem('userinfo',JSON.stringify({userid: user.user.uid}));
+
+                    this.$router.push('/todolist')
                 })
                 .catch(error => {
-                    alert(error.message)
+                    console.log(error);
+                    if(error.code == "auth/invalid-email"){
+                        this.alertmessage = "メールアドレスが間違っています。"
+                    }else if(error.code == "auth/wrong-password"){
+                        this.alertmessage = "パスワードが間違っています。"
+                    }else{
+                        this.alertmessage = "エラー！"
+                    }
+                    
+                    this.alert = true;
                 })
         },
         backHome(){

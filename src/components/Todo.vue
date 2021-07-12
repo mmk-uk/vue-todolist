@@ -52,7 +52,13 @@
                     </v-row>
                     <v-row>
                         <v-col class="text-center pa-0">
-                                <span style="font-size:105%;text-align: right">{{todo.leftdays}}</span>
+                                <template v-if="todo.leftdays<100 && todo.leftdays > -100">
+                                    <span style="font-size:105%;text-align: right">{{todo.leftdays}}</span>
+                                </template>
+                                <template v-else>
+                                    <span style="font-size:85%;text-align: right">{{todo.leftdays}}</span>
+                                </template>
+                                
                                 <span style="font-size:80%">日</span>
                         </v-col>
                     </v-row>
@@ -62,14 +68,14 @@
 
             </v-col>
 
-            <v-col cols="8" sm="8" md="10" lg="10" xl="10">
-                <v-row>
+            <v-col cols="8" sm="8" md="10" lg="10" xl="10" >
+                <v-row class="pt-2">
                     <span style="font-size:110%">
                         {{todo.title}}
                     </span>
                 </v-row>
                 <template v-if="selectCategoryKey == ''">
-                    <v-row class="pt-1">
+                    <v-row class="pt-1 pb-2">
                         <span style="font-size:80%; opacity: 0.7">
                             {{ categorytitle }}
                         </span>
@@ -137,10 +143,11 @@
 
 
 export default {
-    props: ["todo","selectCategoryKey","categorytitle"],
+    props: ["todo","selectCategoryKey","categorytitle","userid","db"],
     methods:{
         doneTodo(todo){
           todo.done = !todo.done;
+          this.db.collection('users').doc(this.userid).collection('todos').doc(todo.id).set(todo);
           //localStorage.setItem('todos',JSON.stringify(this.todos));
         },
         doneIcon(todo){
@@ -170,7 +177,7 @@ export default {
         },
         editTodo(todo,id){
             console.log(this.selectCategoryKey);
-            this.$router.push({name:'edit',params:{editid: id, selectcategorykey: todo.categorykey, backkey: this.selectCategoryKey}});
+            this.$router.push({name:'edit',params:{editid: id,edittodo:todo,selectcategorytitle: this.categorytitle ,selectcategorykey: todo.categorykey, backkey: this.selectCategoryKey, userid: this.userid}});
 
         },
         deadlineDays(today,dueday){

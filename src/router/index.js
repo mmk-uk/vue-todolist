@@ -20,7 +20,7 @@ const routes = [
     path: '/todolist',
     name: 'todolist',
     component: TodoList,
-    props: true
+    props: true,
   },
   {
     path: '/create',
@@ -58,5 +58,25 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+
+
+router.beforeEach((to, from, next) => {
+
+  const userinfo = JSON.parse(localStorage.getItem('userinfo')) || false;
+  const isAuthenticated = userinfo?true:false;
+
+  if ((to.name == 'todolist' || to.name == 'create'|| to.name == 'edit'|| to.name == 'makecategory') && !isAuthenticated){
+    next({ name: 'home' })
+  }
+  else if ((to.name == 'home' || to.name == 'signin'|| to.name == 'signup') && isAuthenticated){
+    next({ name: 'todolist' })
+  }
+  else{
+    next()
+  }
+
+
+})
+
 
 export default router
