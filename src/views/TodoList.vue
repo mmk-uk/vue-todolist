@@ -1,11 +1,19 @@
 <template>
   <v-container>
     <!--  サイドバー  -->
-    <v-navigation-drawer  app temporary absolute v-model="drawer" color="#E6DDC6">
+    <v-navigation-drawer app  clipped  v-model="drawer" color="#E6DDC6">
+      <v-list class="pa-0">
+
+        <v-app-bar flat color="#A19882" dark  >
+        </v-app-bar>
+        <!--
+        <v-list-item style="background-color:#A19882;height:64px">
+        </v-list-item>
+        -->
         <v-list-item>
 
           <v-list-item-title>
-            カテゴリ
+            <strong>カテゴリ</strong>
           </v-list-item-title>
 
           <v-btn text icon @click="drawer = !drawer">
@@ -64,16 +72,37 @@
             </v-col>
           </v-row>
         </v-list-item>
+        </v-list>
+      
 
-        <v-list-item>
+        <!--
+        <v-list-item style="position: fixed;bottom:0">
           <v-row>
             <v-col class="text-center">
-              <v-btn dark elevation="0" color="#CD113B" @click="logout">
+              <v-btn dark elevation="0" block color="#CD113B" @click="logout">
                 ログアウト
               </v-btn>
             </v-col>
           </v-row>
         </v-list-item>
+        -->
+
+        
+
+
+
+        
+
+        <div class="bottom-center text-center">
+            <v-btn dark elevation="0" color="#CD113B" @click="logout">
+                ログアウト
+            </v-btn>
+        </div>
+
+     
+        
+
+
 
 
       </v-navigation-drawer>
@@ -221,7 +250,7 @@ export default {
     created(){
          const userinfo = JSON.parse(localStorage.getItem('userinfo')) || [];
          console.log("ID:"+userinfo);
-        this.userid = userinfo.userid;
+         this.userid = userinfo.userid;
         
 
         //localStorage.clear('categorys');
@@ -497,3 +526,11 @@ export default {
 }
 </script>
 
+<style scoped>
+    .bottom-center{
+        position: fixed;
+        bottom: 15px;
+        right: 2px;
+        left: 2px;
+    }
+</style>

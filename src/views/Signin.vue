@@ -1,8 +1,13 @@
 <template>
     <v-container>
         <v-row>
+            <v-col>
+
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col class="pb-0">
-                <v-alert v-model="alert" type="error" dismissible>
+                <v-alert v-model="alert" :type="alerttype()" dismissible>
                     <span style="font-size:90%">
                     {{alertmessage}}
                     </span>
@@ -34,6 +39,13 @@
 
             </v-col>
         </v-row>
+        <v-row align="center">
+            <v-col class="text-center" style="height:100px">
+                <v-btn text @click="toReset">
+                    パスワードを忘れた
+                </v-btn>
+            </v-col>
+        </v-row>
 
 
     </v-container>
@@ -46,6 +58,7 @@ import "firebase/firestore"
 
 export default {
     name: 'home',
+    props:['sendmail'],
     data() {
         return {
             email: "",
@@ -54,6 +67,15 @@ export default {
             alertmessage:""
         };
     },
+    created(){
+        if(this.sendmail){
+            this.alertmessage = this.sendmail;
+            this.alert = true;
+           // this.sendmail = null;
+        }
+        
+
+    },
     methods: {
         signIn() {
                 firebase.auth().signInWithEmailAndPassword(this.email, this.password)
@@ -61,11 +83,10 @@ export default {
                     // サインインに成功したユーザーのUIDをパラメータにして、Todo画面に遷移
                     // パラメータについては、router.js参照
                     localStorage.setItem('userinfo',JSON.stringify({userid: user.user.uid}));
-
-                    this.$router.push('/todolist')
+                    this.$router.push('/todolist');
                 })
                 .catch(error => {
-                    console.log(error);
+                    this.sendmail = null;
                     if(error.code == "auth/invalid-email"){
                         this.alertmessage = "メールアドレスが間違っています。"
                     }else if(error.code == "auth/wrong-password"){
@@ -79,6 +100,16 @@ export default {
         },
         backHome(){
             this.$router.push('/');
+        },
+        toReset(){
+            this.$router.push('/reset');
+        },
+        alerttype(){
+            if(this.sendmail){
+                return "success";
+            }else{
+                return "error";
+            }
         }
     }
 };

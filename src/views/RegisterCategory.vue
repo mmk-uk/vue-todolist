@@ -1,5 +1,6 @@
 <template>
     <v-container>
+
         <v-row>
             <v-col class="text-center">
                 <v-card color="#FEF7DC">

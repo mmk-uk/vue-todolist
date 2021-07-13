@@ -6,6 +6,7 @@ import RegisterCategory from '../views/RegisterCategory.vue'
 import Signin from '../views/Signin.vue'
 import Signup from '../views/Signup.vue'
 import Home from '../views/Home.vue'
+import Reset from '../views/Reset.vue'
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,12 @@ const routes = [
     name: 'signup',
     component: Signup,
     props: true
+  },
+  {
+    path: '/reset',
+    name: 'reset',
+    component: Reset,
+    props: true
   }
 
 ]
@@ -68,7 +75,7 @@ router.beforeEach((to, from, next) => {
   if ((to.name == 'todolist' || to.name == 'create'|| to.name == 'edit'|| to.name == 'makecategory') && !isAuthenticated){
     next({ name: 'home' })
   }
-  else if ((to.name == 'home' || to.name == 'signin'|| to.name == 'signup') && isAuthenticated){
+  else if ((to.name == 'home' || to.name == 'signin'|| to.name == 'signup'|| to.name == 'reset') && isAuthenticated){
     next({ name: 'todolist' })
   }
   else{

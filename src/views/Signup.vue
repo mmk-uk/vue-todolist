@@ -1,6 +1,20 @@
 <template>
     <v-container>
         <v-row>
+            <v-col>
+
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="pb-0">
+                <v-alert v-model="alert" type="error" dismissible>
+                    <span style="font-size:90%">
+                    {{alertmessage}}
+                    </span>
+                </v-alert>
+            </v-col>
+        </v-row>
+        <v-row>
             <v-col class="text-center">
                 <v-card color="#FEF7DC">
                     <v-card-title>
@@ -9,7 +23,7 @@
                     <v-card-text>
                         <v-form>
                             <v-text-field prepend-icon="mdi-account-circle" label="メールアドレス" v-model="email" :rules="[rules.email]" />
-                            <v-text-field prepend-icon="mdi-lock" label="パスワード(半角英数字をそれぞれ1種類以上含む8文字以上100文字以下)" v-model="password" :rules="[rules.password]" />
+                            <v-text-field prepend-icon="mdi-lock" label="パスワード(半角英数字1種類以上含む8文字以上)" v-model="password" :rules="[rules.password]" />
                             <v-card-actions class="pa-0">
                                 <v-btn text class="pl-0" @click="backHome">
                                     <v-icon left>mdi-less-than</v-icon>キャンセル
@@ -51,7 +65,9 @@ export default {
             const pattern = /^(?=.*?[a-z])(?=.*?\d)[a-z\d]{8,100}$/i
             return pattern.test(value) || '不正なパスワードです.'
             }
-        }
+        },
+        alert: false,
+        alertmessage:""
     };
   },
   created(){
@@ -69,7 +85,18 @@ export default {
         this.$router.push('/signin');
       })
       .catch(error => {
-        alert(error.message)
+        console.log(error);
+                    if(error.code == "auth/invalid-email"){
+                        this.alertmessage = "不正なメールアドレスです。"
+                    }else if(error.code == "auth/weak-password"){
+                        this.alertmessage = "不正なパスワードです。"
+                    }else if(error.code == "auth/email-already-in-use"){
+                        this.alertmessage = "すでに存在しているメールアドレスです。"
+                    }else{
+                        this.alertmessage = "エラー！"
+                    }
+                    
+                    this.alert = true;
       })
     },
     backHome(){

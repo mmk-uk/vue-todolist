@@ -1,8 +1,19 @@
 <template>
   <div id="app">
     <v-app :style="{background: $vuetify.theme.themes.light.background}">
-      <v-app-bar app flat clipped-left color="#A19882" dark class="headline">
+     
+      <v-app-bar app flat clipped-left color="#A19882" dark style="padding:0" v-if="isAuthenticated">
+        
+        <v-app-bar-nav-icon>
+           <v-img :src="require('./assets/AppIcon.jpg')" contain height="50px" style="width:70px"></v-img>
+        </v-app-bar-nav-icon>
+        <div class="pl-1">
+          <font size="5" style="font-family: 'M PLUS Rounded 1c'">タスク管理</font>
+        </div>
+        
+         <!--
           <v-toolbar-title style="font-family: 'M PLUS Rounded 1c'">タスク管理</v-toolbar-title>
+          -->
           <v-spacer></v-spacer>
 
           <v-row align="end">
@@ -13,6 +24,7 @@
             </v-col>
           </v-row>
       </v-app-bar>
+      
 
       <v-main>
         <router-view></router-view>
@@ -24,9 +36,6 @@
 
 
 <script>
-import firebase from "firebase/app"
-import "firebase/auth"
-import "firebase/firestore"
 //import Signin from "@/views/Signin";
 
 export default {
@@ -36,22 +45,30 @@ export default {
   },
   data(){
         return{
-            isLogin: false,
-            userData: null,
+            isAuthenticated: false,
             today:""
         }
   },
   created(){
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.isLogin = true;
-        this.userData = user;
-      } else {
-        this.isLogin = false;
-        this.userData = null;
-      }
-    });
+    //console.log(this.$route.path);
     this.today = new Date();
+  },
+  mounted(){
+        if(this.$route.path == '/' || this.$route.path == '/signin' || this.$route.path == '/signup'|| this.$route.path == '/reset'){
+          this.isAuthenticated = false;
+        }else{
+          this.isAuthenticated = true;
+        }
+  },
+  watch:{
+    '$route': function (to) {
+
+        if(to.path == '/' || to.path == '/signin' || to.path == '/signup'|| to.path == '/reset'){
+          this.isAuthenticated = false;
+        }else{
+          this.isAuthenticated = true;
+        }
+      }
   }
 };
 </script>
