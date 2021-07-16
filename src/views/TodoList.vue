@@ -3,9 +3,14 @@
     <!--  サイドバー  -->
     <v-navigation-drawer app  clipped  v-model="drawer" color="#E6DDC6">
       <v-list class="pa-0">
-
-        <v-app-bar flat color="#A19882" dark  >
-        </v-app-bar>
+        <template v-if="widthGet() < 1264">
+          <v-app-bar flat color="#A19882" dark style="height:100px">
+          </v-app-bar>
+        </template>
+        <template v-else>
+          <v-app-bar flat color="#A19882" dark style="height:40px">
+          </v-app-bar>
+        </template>
         <!--
         <v-list-item style="background-color:#A19882;height:64px">
         </v-list-item>
@@ -520,6 +525,9 @@ export default {
             firebase.auth().signOut();
             localStorage.clear('userinfo');
             this.$router.push("/");
+        },
+        widthGet(){
+          return window.innerWidth;
         }
         
     }

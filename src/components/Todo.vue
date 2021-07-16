@@ -1,10 +1,10 @@
 <template>
-    <v-card outlined :color="cardColor(todo)" :style="textColor(todo)">
+    <v-card outlined :color="cardColor(todo)" :style="textColor(todo)" style="border-radius:12px;">
         <v-container>
 
         <v-row align="center" >
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
-                <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:1px solid ;margin:auto">
+                <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:1px solid ;margin:auto;border-radius:8px;">
                 <v-container >
                 <template v-if="todo.leftdays < 0">
 
@@ -69,15 +69,23 @@
             </v-col>
 
             <v-col cols="8" sm="8" md="10" lg="10" xl="10" >
-                <v-row class="pt-2">
-                    <span style="font-size:110%">
-                        {{todo.title}}
-                    </span>
-                </v-row>
+
                 <template v-if="selectCategoryKey == ''">
+                    <v-row class="pt-2">
+                        <span style="font-size:110%">
+                            {{todo.title}}
+                        </span>
+                    </v-row>
                     <v-row class="pt-1 pb-2">
                         <span style="font-size:80%; opacity: 0.7">
                             {{ categorytitle }}
+                        </span>
+                    </v-row>
+                </template>
+                <template v-else>
+                    <v-row>
+                        <span style="font-size:110%">
+                            {{todo.title}}
                         </span>
                     </v-row>
                 </template>

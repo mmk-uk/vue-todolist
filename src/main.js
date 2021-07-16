@@ -13,6 +13,7 @@ import './assets/sass/style.scss'
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
+import './registerServiceWorker'
 
 const config = {
   apiKey: "AIzaSyDwRJ28HzEqsneTCog1JbZj3abSoThclaM",
