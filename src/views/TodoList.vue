@@ -174,7 +174,7 @@
 
           <template v-if="selectCategoryKey == ''">
 
-            <template v-for="todo in todos.filter(todo => { return todo.pass == true || todo.done == false})">
+            <template v-for="todo in todos.filter(todo => { return todo.pass == false || todo.done == false})">
               <v-row v-bind:key="todo.id" dense>
                 <v-col>
                   <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
@@ -186,7 +186,7 @@
           <template v-else>
 
             <template v-if="archivemode == true">
-              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
+              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == true && todo.done == true}).reverse()">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
@@ -195,7 +195,7 @@
               </template>
             </template>
             <template v-else>
-              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.done == false)})">
+              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == false) || (todo.categorykey == selectCategoryKey && todo.done == false)})">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
