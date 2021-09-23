@@ -174,7 +174,7 @@
 
           <template v-if="selectCategoryKey == ''">
 
-            <template v-for="todo in todos.filter(todo => { return todo.pass == false || todo.done == false})">
+            <template v-for="todo in todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})">
               <v-row v-bind:key="todo.id" dense>
                 <v-col>
                   <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
@@ -186,7 +186,7 @@
           <template v-else>
 
             <template v-if="archivemode == true">
-              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == true && todo.done == true}).reverse()">
+              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
@@ -195,7 +195,7 @@
               </template>
             </template>
             <template v-else>
-              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == false) || (todo.categorykey == selectCategoryKey && todo.done == false)})">
+              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == false)})">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
@@ -305,6 +305,7 @@ export default {
         //  return new Date(a.date) - new Date(b.date);
         //});
         this.today = new Date();
+       
         //this.selectCategoryKey = "";
         
         //this.todos.forEach(
@@ -339,6 +340,8 @@ export default {
           })
         })
 
+        
+
         this.db.collection('users').doc(this.userid).collection('todos')
         .onSnapshot((snapshot) => {
           snapshot.docChanges().forEach((change) => {
@@ -351,7 +354,23 @@ export default {
 
             // タスクが追加された時、tasks配列に追加
             if (change.type === 'added') {
-              this.todos.push({id: doc.data().id, categorykey:doc.data().categorykey,title:doc.data().title,date:doc.data().date,done:doc.data().done,pass:doc.data().pass,leftdays:this.deadlineDays(this.today,doc.data().date)});
+              const todo = {id: doc.data().id, 
+                   categorykey:doc.data().categorykey,
+                   title:doc.data().title,
+                   date:doc.data().date,
+                   done:doc.data().done,
+                   pass:doc.data().pass,
+                   leftdays:this.deadlineDays(this.today,doc.data().date)}
+
+              const passdue = this.checkPass(todo.date);
+              if(!passdue){
+                //console.log("過ぎてる");
+                todo.pass = false;
+                this.db.collection('users').doc(this.userid).collection('todos').doc(todo.id).set(todo);
+              }
+
+              this.todos.push(todo);
+
               this.todos.sort(function (a, b) {
                 return new Date(a.date) - new Date(b.date);
               });
@@ -362,6 +381,11 @@ export default {
             }
           })
         })
+
+
+        
+
+
 
 
         if (this.sckey){
@@ -378,6 +402,8 @@ export default {
           //this.todos = this.todos.filter(todo => { return todo.categorykey == this.selectCategoryKey});
         }
 
+        
+
 
 
 
@@ -388,7 +414,14 @@ export default {
       },
       today(){
         this.todos.forEach(
-          todo => todo.pass = this.checkPass(todo.date)
+          todo => {
+            const passdue = this.checkPass(todo.date);
+              if(!passdue){
+                console.log("過ぎてる")
+                todo.pass = false;
+                this.db.collection('users').doc(this.userid).collection('todos').doc(todo.id).set(todo);
+              }
+            }
         );
       },
       drawer(){
@@ -479,9 +512,9 @@ export default {
           const date2 = new Date(date);
           const date3 = new Date(date2.getFullYear(),date2.getMonth(),date2.getDate());
           if ((date3 - today2) < 0){
-            return false;
+            return false; //過ぎてる
           }else{
-            return true;
+            return true; //余裕あり
           }
         },
         archiveModeChange(){
