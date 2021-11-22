@@ -16,7 +16,7 @@
         </v-row>
         <v-row>
             <v-col class="text-center">
-                <v-card color="#FEF7DC">
+                <v-card color="#FFFFFF">
                     <v-card-title>
                         <h2>新規登録</h2>
                     </v-card-title>
@@ -29,7 +29,7 @@
                                     <v-icon left>mdi-less-than</v-icon>キャンセル
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn dark color="#A19882" @click="signUp">
+                                <v-btn dark color="#2E4C6D" @click="signUp">
                                     登録
                                 </v-btn>
                             </v-card-actions>

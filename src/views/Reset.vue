@@ -16,7 +16,7 @@
         </v-row>
         <v-row>
             <v-col class="text-center pt-0">
-                <v-card color="#FEF7DC">
+                <v-card color="#FFFFFF">
                     <v-card-title>
                         <h2>パスワードを再発行</h2>
                     </v-card-title>
@@ -28,7 +28,7 @@
                                     <v-icon left>mdi-less-than</v-icon>キャンセル
                                 </v-btn>
                                 <v-spacer></v-spacer>
-                                <v-btn dark color="#A19882" @click="send">
+                                <v-btn dark color="#2E4C6D" @click="send">
                                     送信
                                 </v-btn>
                             </v-card-actions>

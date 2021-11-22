@@ -9,7 +9,7 @@ export default new Vuetify({
     theme: {
         themes: {
           light: {
-            background: "#FEF7DC"
+            background: "#FFFFFF"
           }
         }
     }  

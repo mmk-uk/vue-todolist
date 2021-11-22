@@ -3,7 +3,7 @@
 
         <v-row>
             <v-col class="text-center">
-                <v-card color="#FEF7DC">
+                <v-card color="#FFFFFF">
                     <template v-if="this.newCategory">
                         <v-card-title class="pb-0">新規カテゴリ</v-card-title>
                     </template>

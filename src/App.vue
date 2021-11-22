@@ -2,36 +2,22 @@
   <div id="app">
     <v-app :style="{background: $vuetify.theme.themes.light.background}">
      
-     <v-app-bar app flat clipped-left color="#A19882" dark style="margin-top:0px;padding-top:0px" height="60px" v-if="isAuthenticated"></v-app-bar>
-      <v-app-bar app flat clipped-left color="#A19882" dark style="margin-top:40px;padding-top:0px" height="60px" v-if="isAuthenticated">
-     
-            
-              <v-app-bar-nav-icon>
-                <v-img :src="require('./assets/AppIcon.jpg')" contain height="50px" style="width:70px"></v-img>
-              </v-app-bar-nav-icon>
-           
+     <v-app-bar app flat clipped-left color="#2E4C6D" dark style="margin-top:0px;padding-top:0px" height="60px" v-if="isAuthenticated"></v-app-bar>
+      <v-app-bar app flat clipped-left color="#2E4C6D" dark style="margin-top:40px;padding-top:0px" height="60px" v-if="isAuthenticated">
 
-              <div class="pl-1">
-                <font size="5" style="font-family: 'M PLUS Rounded 1c'">タスク管理</font>
-              </div>
-              
+                <v-app-bar-nav-icon>
+                  <v-img :src="require('./assets/AppIcon2.jpg')" contain height="50px" style="width:70px"></v-img>
+                </v-app-bar-nav-icon>
+                
                 <v-spacer></v-spacer>
 
                 <v-row align="end">
                   <v-col class="text-right pa-2">
-                    <font size="3" style="font-family: 'M PLUS Rounded 1c'">
+                    <font size="3" style="font-family: 'DotGothic16', sans-serif">
                       今日：{{today.getFullYear()}}年{{today.getMonth()+1}}月{{today.getDate()}}日
                     </font>
                   </v-col>
                 </v-row>
-              
-
-
-          
-
-
-          
-  
 
       </v-app-bar>
       
@@ -90,10 +76,10 @@ export default {
 
 <style>
 #app {
-  font-family: 'M PLUS Rounded 1c';
+  font-family: 'DotGothic16', sans-serif;
 }
 
 body {
-  background-color: #FEF7DC;
+  background-color: #ffffff;
 }
 </style>

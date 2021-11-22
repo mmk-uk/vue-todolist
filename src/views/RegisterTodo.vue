@@ -3,7 +3,7 @@
 
     <v-row justify="center">
       <v-col cols="12">
-        <v-card color="#FEF7DC">
+        <v-card color="#FFFFFF">
           <template v-if="this.newTodo">
             <v-card-title>新規タスク</v-card-title>
           </template>

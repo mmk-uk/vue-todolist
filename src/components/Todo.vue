@@ -1,11 +1,32 @@
 <template>
     <v-card outlined :color="cardColor(todo)" :style="textColor(todo)" style="border-radius:12px;">
         <v-container>
-
+        
+        <v-row style="height:12px">
+            <v-col style="font-size:70%;padding:5px 8px">
+                {{getYear(todo.date)}}/{{getMonth(todo.date)}}/{{getDate(todo.date)}}
+            </v-col>
+        </v-row>
+        
         <v-row align="center" >
+            <!--
+            <v-col cols="1" sm="1" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
+                <v-row>
+                    <v-col class="text-center pa-0 mt-1" style="font-size:70%">
+                        {{getYear(todo.date)}}
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col class="text-center pa-0" style="font-size:70%">
+                        {{getMonth(todo.date)}}/{{getDate(todo.date)}}
+                    </v-col>
+                </v-row>
+            </v-col>
+            -->
             <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
                 <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:1px solid ;margin:auto;border-radius:8px;">
-                <v-container >
+                <v-container>
+                
                 <template v-if="todo.leftdays < 0">
 
                     <v-row>
@@ -68,9 +89,10 @@
 
             </v-col>
 
-            <v-col cols="8" sm="8" md="10" lg="10" xl="10" >
+            <v-col cols="9" sm="9" md="10" lg="10" xl="10" >
 
                 <template v-if="selectCategoryKey == ''">
+                    
                     <v-row class="pt-2">
                         <span style="font-size:110%">
                             {{todo.title}}
@@ -92,7 +114,7 @@
 
             </v-col>
 
-            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-right">
+            <v-col cols="1" sm="1" md="1" lg="1" xl="1" class="text-right" style="padding:5px">
             <!--
             <v-btn text icon v-on:click="editTodo(todo.id)">
                 <v-icon>mdi-dots-horizontal</v-icon>
@@ -126,14 +148,14 @@
             </template>
             -->
                 <v-row>
-                    <v-col class="pa-0 text-right">
+                    <v-col class="pa-0 text-center">
                         <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
                             <v-icon>{{ doneIcon(todo) }}</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col class="pa-0 text-right">
+                    <v-col class="pa-0 text-center">
                         <v-btn text icon v-on:click="editTodo(todo,todo.id)">
                             <v-icon>mdi-dots-horizontal</v-icon>
                         </v-btn>
@@ -205,6 +227,18 @@ export default {
             const index = this.categorys.findIndex((item) => item.id == this.selectCategoryKey);
             return this.categorys[index].title;
           }
+        },
+        getYear(date){
+            let dateAry = date.split('-');
+            return dateAry[0];
+        },
+        getMonth(date){
+            let dateAry = date.split('-');
+            return dateAry[1];
+        },
+        getDate(date){
+            let dateAry = date.split('-');
+            return dateAry[2];
         }
     }
         

@@ -8,27 +8,27 @@
         <v-row>
             <v-col>
                 <v-img
-                :src="require('../assets/AppLogo.png')"
+                :src="require('../assets/AppLogo2.jpg')"
                 class="my-3"
                 contain
-                height="200"
+                height="300"
                 />
             </v-col>
         </v-row>
-        <v-row>
+        <v-row style="height:100px">
             <v-col class="text-center">
                 <h1>タスク管理アプリ</h1>
             </v-col>
         </v-row>
         <v-row>
             <v-col></v-col>
-            <v-col class="text-center">
-                <v-btn dark color="#A19882" @click="toSignup">
+            <v-col class="text-center" >
+                <v-btn dark color="#2E4C6D" @click="toSignup">
                     新規登録
                 </v-btn>
             </v-col>
             <v-col class="text-center">
-                <v-btn dark color="#A19882" @click="toSignin">
+                <v-btn dark color="#2E4C6D" @click="toSignin">
                     ログイン
                 </v-btn>
             </v-col>

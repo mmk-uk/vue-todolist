@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <!--  サイドバー  -->
-    <v-navigation-drawer app  clipped  v-model="drawer" color="#E6DDC6">
+    <v-navigation-drawer app  clipped  v-model="drawer" color="#FFFFFF">
       <v-list class="pa-0">
         <template v-if="widthGet() < 1264">
-          <v-app-bar flat color="#A19882" dark style="height:100px">
+          <v-app-bar flat color="#2E4C6D" dark style="height:100px">
           </v-app-bar>
         </template>
         <template v-else>
-          <v-app-bar flat color="#A19882" dark style="height:40px">
+          <v-app-bar flat color="#2E4C6D" dark style="height:40px">
           </v-app-bar>
         </template>
         <!--
@@ -52,6 +52,9 @@
           <template v-for="category in categorys" >
             <v-list-item dense :key="category.id" @click="selectCategory(category.title,category.id)">
               <v-list-item-title>{{category.title}}</v-list-item-title>
+              <div class="maru">
+                <span>{{ todos.filter(todo => { return todo.categorykey == category.id}).length - 1}}</span>
+              </div>
             </v-list-item>
           </template>
         </template>
@@ -176,7 +179,8 @@
 
             <template v-for="todo in todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})">
               <v-row v-bind:key="todo.id" dense>
-                <v-col>
+
+                <v-col >
                   <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
                 </v-col>
               </v-row>
@@ -561,6 +565,18 @@ export default {
         },
         widthGet(){
           return window.innerWidth;
+        },
+        getYear(date){
+            let dateAry = date.split('-');
+            return dateAry[0];
+        },
+        getMonth(date){
+            let dateAry = date.split('-');
+            return dateAry[1];
+        },
+        getDate(date){
+            let dateAry = date.split('-');
+            return dateAry[2];
         }
         
     }
@@ -573,5 +589,16 @@ export default {
         bottom: 15px;
         right: 2px;
         left: 2px;
+    }
+
+    .maru {
+    height:20px;
+    width:20px;
+    border-radius:50%;
+    line-height:20px;
+    text-align:center;
+    background:#2E4C6D;
+    font-size:10px;
+    color:#FFFFFF;
     }
 </style>
