@@ -183,16 +183,20 @@
               <v-row v-bind:key="todo.id" dense align="end">
                 <v-col>
                   <template v-if="index==0">
-                    <v-row style="height:30px">
+                    <v-row style="height:40px;padding:10px 0px 0px 0px">
                       <v-col>
-                        <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                        <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                        <v-divider></v-divider>
                       </v-col>
                     </v-row>
                   </template>
                   <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
-                    <v-row style="height:30px">
+                    <v-row style="height:40px;padding:10px 0px 0px 0px">
                       <v-col>
-                        <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                        <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                        <v-divider></v-divider>
                       </v-col>
                     </v-row>
                   </template>
@@ -200,16 +204,33 @@
                     <v-col cols="1">
                       <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
                       <v-container>
-                      <v-row align="end">
-                        <v-col class="text-center pa-0">
-                          <span style="font-weight: bold">{{getDate(todo.date)}}</span>
-                        </v-col>
-                      </v-row>
-                      <v-row align="start">
-                        <v-col class="text-center pa-0">
-                          <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
-                        </v-col>
-                      </v-row>
+                        <template v-if="index==0">
+                          <v-row align="end">
+                            <v-col class="text-center pa-0 ">
+                              <span style="font-weight: bold">{{getDate(todo.date)}}</span>
+                            </v-col>
+                          </v-row>
+                          <v-row align="start">
+                            <v-col class="text-center pa-0">
+                              <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
+                            </v-col>
+                          </v-row>
+                        </template>
+                        <template v-else-if="todo.date != todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date">
+                          <v-row align="end">
+                            <v-col class="text-center pa-0">
+                              <span style="font-weight: bold">{{getDate(todo.date)}}</span>
+                            </v-col>
+                          </v-row>
+                          <v-row align="start">
+                            <v-col class="text-center pa-0">
+                              <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
+                            </v-col>
+                          </v-row>
+                        </template>
+                      
+
+
                       </v-container>
                       </v-card>
                     </v-col>
@@ -232,16 +253,20 @@
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <template v-if="index==0">
-                      <v-row style="height:30px">
+                      <v-row style="height:40px;padding:10px 0px 0px 0px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                          <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                          <v-divider></v-divider>
                         </v-col>
                       </v-row>
                     </template>
-                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
-                      <v-row style="height:30px">
+                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true})[index-1].date)">
+                      <v-row style="height:40px;padding:10px 0px 0px 0px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                          <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                          <v-divider></v-divider>
                         </v-col>
                       </v-row>
                     </template>
@@ -275,16 +300,20 @@
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
                     <template v-if="index==0">
-                      <v-row style="height:30px">
+                      <v-row style="height:40px;padding:10px 0px 0px 0px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                          <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                          <v-divider></v-divider>
                         </v-col>
                       </v-row>
                     </template>
-                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
-                      <v-row style="height:30px">
+                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == false)})[index-1].date)">
+                      <v-row style="height:40px;padding:10px 0px 0px 0px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getMonth(todo.date)}}月</span>
+                          <span style="font-size:50%">  {{getYear(todo.date)}}年</span>
+                          <v-divider></v-divider>
                         </v-col>
                       </v-row>
                     </template>

@@ -151,14 +151,14 @@
             </template>
             -->
                 <v-row>
-                    <v-col class="pa-0 text-center">
+                    <v-col class="text-right" style="padding:0px 13px 0px 0px">
                         <v-btn text icon color="#5D534A" @click="doneTodo(todo)">
                             <v-icon>{{ doneIcon(todo) }}</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col class="pa-0 text-center">
+                    <v-col class="text-right" style="padding:0px 13px 0px 0px">
                         <v-btn text icon v-on:click="editTodo(todo,todo.id)">
                             <v-icon>mdi-dots-horizontal</v-icon>
                         </v-btn>
