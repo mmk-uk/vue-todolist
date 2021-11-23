@@ -26,7 +26,7 @@
                 </v-row>
             </v-col>
             -->
-            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2" style="background-color:rgba(0,0,0,0);border-radius:5px">
+            <v-col cols="2" sm="1" md="1" lg="1" xl="1" class="text-center pl-2 pr-2" style="background-color:rgba(0,0,0,0);border-radius:5px">
                 <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
                 <v-container>
                 
@@ -92,7 +92,7 @@
 
             </v-col>
 
-            <v-col cols="9" sm="9" md="10" lg="10" xl="10" style="padding:0px 0px 0px 15px">
+            <v-col cols="9" sm="10" md="10" lg="10" xl="10" style="padding:0px 0px 0px 15px">
 
                 <template v-if="selectCategoryKey == ''">
                     

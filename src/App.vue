@@ -79,6 +79,7 @@ export default {
   font-family: 'DotGothic16', sans-serif;
 }
 
+
 body {
   background-color: #ffffff;
 }

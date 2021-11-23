@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="max-width:1000px">
     <!--  サイドバー  -->
     <v-navigation-drawer app  clipped  v-model="drawer" color="#FFFFFF">
       <v-list class="pa-0">
@@ -53,7 +53,7 @@
             <v-list-item dense :key="category.id" @click="selectCategory(category.title,category.id)">
               <v-list-item-title>{{category.title}}</v-list-item-title>
               <div class="maru">
-                <span>{{ todos.filter(todo => { return todo.categorykey == category.id}).length - 1}}</span>
+                <span>{{ todos.filter(todo => { return todo.categorykey == category.id && todo.pass == true}).length}}</span>
               </div>
             </v-list-item>
           </template>
@@ -192,7 +192,7 @@
                   <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
                     <v-row style="height:30px">
                       <v-col>
-                        <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
                       </v-col>
                     </v-row>
                   </template>
@@ -234,18 +234,18 @@
                     <template v-if="index==0">
                       <v-row style="height:30px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
                         </v-col>
                       </v-row>
                     </template>
                     <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
                       <v-row style="height:30px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
                         </v-col>
                       </v-row>
                     </template>
-                    <v-row>
+                    <v-row align="center">
                        <v-col cols="1">
                         <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
                         <v-container>
@@ -277,18 +277,18 @@
                     <template v-if="index==0">
                       <v-row style="height:30px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
                         </v-col>
                       </v-row>
                     </template>
                     <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
                       <v-row style="height:30px">
                         <v-col>
-                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                          <span style="font-weight: bold;font-size:100%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
                         </v-col>
                       </v-row>
                     </template>
-                    <v-row>
+                    <v-row align="center">
                        <v-col cols="1">
                         <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
                         <v-container>
@@ -316,6 +316,7 @@
 
 
           </template>
+          <!--
           <v-row>
               <template v-if="this.selectCategoryKey != '' && archivemode == false">
                 <v-col class="pa-0 pr-3 text-center">
@@ -325,8 +326,17 @@
                 </v-col>
              </template>
           </v-row>
+          -->
         </v-col>
       </v-row>
+      
+      <template v-if="this.selectCategoryKey != '' && archivemode == false">
+        <div class="bottom-right" elevation="0" v-on:click="addTodo">
+          <v-btn fab color="#2E4C6D">
+            <v-icon x-large color="white">mdi-plus</v-icon>
+          </v-btn>
+        </div>
+       </template>
     
 
   </v-container>
@@ -714,5 +724,11 @@ export default {
     background:#2E4C6D;
     font-size:10px;
     color:#FFFFFF;
+    }
+
+    .bottom-right{
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
     }
 </style>
