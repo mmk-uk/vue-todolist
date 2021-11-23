@@ -1,14 +1,17 @@
 <template>
-    <v-card outlined :color="cardColor(todo)" :style="textColor(todo)" style="border-radius:12px;">
+    <v-card outlined :color="cardColor(todo)" :style="textColor(todo)" style="border-radius:6px;">
         <v-container>
+            <!--
         
         <v-row style="height:12px">
             <v-col style="font-size:70%;padding:5px 8px">
                 {{getYear(todo.date)}}/{{getMonth(todo.date)}}/{{getDate(todo.date)}}
             </v-col>
         </v-row>
+
+         -->
         
-        <v-row align="center" >
+        <v-row align="center" style="margin:-13px">
             <!--
             <v-col cols="1" sm="1" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
                 <v-row>
@@ -23,8 +26,8 @@
                 </v-row>
             </v-col>
             -->
-            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2">
-                <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:1px solid ;margin:auto;border-radius:8px;">
+            <v-col cols="2" sm="2" md="1" lg="1" xl="1" class="text-center pl-2 pr-2" style="background-color:rgba(0,0,0,0);border-radius:5px">
+                <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
                 <v-container>
                 
                 <template v-if="todo.leftdays < 0">
@@ -89,7 +92,7 @@
 
             </v-col>
 
-            <v-col cols="9" sm="9" md="10" lg="10" xl="10" >
+            <v-col cols="9" sm="9" md="10" lg="10" xl="10" style="padding:0px 0px 0px 15px">
 
                 <template v-if="selectCategoryKey == ''">
                     

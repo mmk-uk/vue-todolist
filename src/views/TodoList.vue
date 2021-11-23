@@ -172,17 +172,55 @@
       </v-row>
 
       <!--  Todo表示  -->
+
+
       <v-row class="ma-0">
         <v-col class="mt-0 pl-0 pr-0">
 
           <template v-if="selectCategoryKey == ''">
 
-            <template v-for="todo in todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})">
-              <v-row v-bind:key="todo.id" dense>
-
-                <v-col >
-                  <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+            <template v-for="(todo,index) in todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})">
+              <v-row v-bind:key="todo.id" dense align="end">
+                <v-col>
+                  <template v-if="index==0">
+                    <v-row style="height:30px">
+                      <v-col>
+                        <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                      </v-col>
+                    </v-row>
+                  </template>
+                  <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
+                    <v-row style="height:30px">
+                      <v-col>
+                        <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                      </v-col>
+                    </v-row>
+                  </template>
+                  <v-row align="center">
+                    <v-col cols="1">
+                      <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
+                      <v-container>
+                      <v-row align="end">
+                        <v-col class="text-center pa-0">
+                          <span style="font-weight: bold">{{getDate(todo.date)}}</span>
+                        </v-col>
+                      </v-row>
+                      <v-row align="start">
+                        <v-col class="text-center pa-0">
+                          <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
+                        </v-col>
+                      </v-row>
+                      </v-container>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="11">
+                      <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+                    </v-col>
+                  </v-row>
                 </v-col>
+
+
+
               </v-row>
             </template>
           </template>
@@ -190,19 +228,87 @@
           <template v-else>
 
             <template v-if="archivemode == true">
-              <template v-for="todo in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
+              <template v-for="(todo,index) in todos.filter(todo => { return todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == true}).reverse()">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
-                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+                    <template v-if="index==0">
+                      <v-row style="height:30px">
+                        <v-col>
+                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        </v-col>
+                      </v-row>
+                    </template>
+                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
+                      <v-row style="height:30px">
+                        <v-col>
+                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        </v-col>
+                      </v-row>
+                    </template>
+                    <v-row>
+                       <v-col cols="1">
+                        <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
+                        <v-container>
+                        <v-row align="end">
+                          <v-col class="text-center pa-0">
+                            <span style="font-weight: bold">{{getDate(todo.date)}}</span>
+                          </v-col>
+                        </v-row>
+                        <v-row align="start">
+                          <v-col class="text-center pa-0">
+                            <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
+                          </v-col>
+                        </v-row>
+                        </v-container>
+                        </v-card>
+                      </v-col>
+                      <v-col cols="11">
+                        <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+                      </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
               </template>
             </template>
             <template v-else>
-              <template v-for="todo in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == false)})">
+              <template v-for="(todo,index) in todos.filter(todo => { return (todo.categorykey == selectCategoryKey && todo.pass == true) || (todo.categorykey == selectCategoryKey && todo.pass == false && todo.done == false)})">
                 <v-row v-bind:key="todo.id" dense>
                   <v-col>
-                    <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+                    <template v-if="index==0">
+                      <v-row style="height:30px">
+                        <v-col>
+                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        </v-col>
+                      </v-row>
+                    </template>
+                    <template v-else-if="getMonth(todo.date) != getMonth(todos.filter(todo => { return (todo.pass == true) || (todo.pass == false && todo.done == false)})[index-1].date)">
+                      <v-row style="height:30px">
+                        <v-col>
+                          <span style="font-weight: bold;font-size:90%">{{getYear(todo.date)}}/{{getMonth(todo.date)}}</span>
+                        </v-col>
+                      </v-row>
+                    </template>
+                    <v-row>
+                       <v-col cols="1">
+                        <v-card outlined elevation="0" height="50px" max-width="65px" style="background-color:rgba(0,0,0,0);border:0px solid ;margin:auto;border-radius:8px;">
+                        <v-container>
+                        <v-row align="end">
+                          <v-col class="text-center pa-0">
+                            <span style="font-weight: bold">{{getDate(todo.date)}}</span>
+                          </v-col>
+                        </v-row>
+                        <v-row align="start">
+                          <v-col class="text-center pa-0">
+                            <span style="font-size:70%">({{getYoubi(todo.date)}})</span>
+                          </v-col>
+                        </v-row>
+                        </v-container>
+                        </v-card>
+                      </v-col>
+                      <v-col cols="11">
+                        <Todo :todo="todo" :selectCategoryKey="selectCategoryKey" :categorytitle="checkCategory(todo.categorykey)" :userid="userid" :db="db"></Todo>
+                      </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
               </template>
@@ -577,7 +683,15 @@ export default {
         getDate(date){
             let dateAry = date.split('-');
             return dateAry[2];
+        },
+        getYoubi(date){
+            let dateAry = date.split('-');
+            var nichi = new Date(dateAry[0],dateAry[1]-1,dateAry[2]);
+            var dayOfWeekStrJP = [ "日", "月", "火", "水", "木", "金", "土" ] ;
+
+            return dayOfWeekStrJP[nichi.getDay()];
         }
+        
         
     }
 }
